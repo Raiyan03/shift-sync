@@ -19,4 +19,6 @@ const app = initializeApp(firebaseConfig);
 
 // Initializing Firebase authentication service and exporting it.
 // 'auth' is an instance of Firebase Auth service, used for handling user authentication.
-export const auth = getAuth(app);
+const auth = getAuth(app);
+
+export {auth};

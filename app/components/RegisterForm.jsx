@@ -1,12 +1,20 @@
 "use client"
 import { useState } from 'react';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
+import Link from 'next/link';
+import { useAuth } from "./Auth-Context";
+import { doCreateUserWithEmailAndPassword, doSignInWithEmailAndPassword } from "./auth";
+import { redirect } from 'next/navigation';
+import { Router } from 'next/router';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const {userLoggedIn} = useAuth();
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,13 +23,14 @@ const RegisterForm = () => {
       alert("Passwords do not match!");
       return;
     }
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Password:', password);
+
+    doCreateUserWithEmailAndPassword(email,password);
+
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      {userLoggedIn && redirect("/")}
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Shift Sync - Register</h2>
         <form onSubmit={handleSubmit}>
@@ -99,6 +108,7 @@ const RegisterForm = () => {
           >
             Register
           </button>
+          <label className='text-black flex text-center justify-center align-middle m-auto'>Already an user Login&nbsp;<Link href='/' className='text-blue-500'>Here</Link></label>
         </form>
       </div>
     </div>

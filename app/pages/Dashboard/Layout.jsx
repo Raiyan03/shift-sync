@@ -1,7 +1,8 @@
 "use client"
 import { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText, Typography, Box } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText, Typography, Box, Button } from '@mui/material';
 // import MenuIcon from '@mui/icons-material/Menu';
+import { doSignOut } from '@/app/components/auth';
 
 const drawerWidth = 240;
 
@@ -41,6 +42,9 @@ const Layout = ({ children }) => {
           <Typography variant="h6" noWrap component="div">
             Manager Dashboard
           </Typography>
+
+          <Button onClick={doSignOut()}>Log Out</Button>
+
         </Toolbar>
       </AppBar>
       <Drawer

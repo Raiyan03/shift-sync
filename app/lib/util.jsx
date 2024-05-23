@@ -19,12 +19,10 @@ export async function getOrganization(){
     // const docRef = doc(db, "Organizations", organization);
     const colRef = query(collection(db, "Organizations"))
     const docSnap = await getDocs(colRef);
-
-    return docSnap;
-
-    // if(docSnap.exists()){
-    //     console.log(docSnap.data());
-    // }else{
-    //     console.log("No data");
-    // }
+    const orgs = [];
+    docSnap.forEach((doc) => {
+        const data = doc.data();
+        orgs.push(data);
+    })
+    return orgs;
 }

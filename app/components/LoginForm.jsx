@@ -23,7 +23,7 @@ const LoginForm = () => {
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-      {userLoggedIn && redirect('/pages/ManagerSide/')}
+      {userLoggedIn && redirect('/pages/Employee/')}
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
         Shift Sync
       </h2>

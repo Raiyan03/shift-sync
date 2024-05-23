@@ -14,8 +14,18 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID, // App ID for the Firebase application
 };
 
+const secondaryAppConfig = {
+    apiKey: process.env.SECONDARY_FIREBASE_API_KEY,
+    authDomain: process.env.SECONDARY_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.SECONDARY_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.SECONDARY_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.SECONDARY_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.SECONDARY_FIREBASE_APP_ID,
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const secondaryApp = initializeApp(secondaryAppConfig, "secondary");
 
 // Initializing Firebase authentication service and exporting it.
 // 'auth' is an instance of Firebase Auth service, used for handling user authentication.

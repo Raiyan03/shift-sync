@@ -1,11 +1,16 @@
+"use client"
+import { useAuth } from '@/app/components/Auth-Context';
 import Layout from '@/app/pages/Employee/layout';
+import { useRouter } from 'next/navigation';
+import Data from './data';
 
 const Info = () => {
-  return (
-    <>
-      <h1 className="text-2xl font-bold mb-4">Your Information</h1>
-      </>
-  );
+
+  const { userLoggedIn } = useAuth();
+  const { push } = useRouter();
+
+    return <div className="text-black">{userLoggedIn ? <Data /> : push("/")}</div>;
+
 };
 
 export default Info;

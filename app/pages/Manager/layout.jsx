@@ -1,5 +1,5 @@
+"use client"
 // components/Layout.js
-import { AuthProvider } from '@/app/components/Auth-Context';
 import Navbar from '@/app/pages/Employee/comps/navbar';
 import Link from 'next/link';
 
@@ -12,14 +12,14 @@ const Layout = ({ children }) => {
           <nav>
             <ul>
               <li className="mb-4">
-                <Link href="/pages/Employee/pages/Schedule">Schedule</Link>
+                <Link href="/pages/Manager/">Information</Link>
               </li>
               <li className="mb-4">
-                <Link href="/pages/Employee/pages/Preference">Preferences</Link>
+                <Link href="/pages/Manager/AddUsers">Add Employees</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/pages/Employee/pages/Info">Info</Link>
-              </li>
+              </li> */}
             </ul>
           </nav>
         </aside>

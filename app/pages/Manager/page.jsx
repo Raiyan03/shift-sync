@@ -1,17 +1,20 @@
-"use client"
+"use client";
+import React from "react";
+import Navbar from "../Employee/comps/navbar";
 import { AuthProvider, useAuth } from "@/app/components/Auth-Context";
-import Layout from "./layout";
 import { redirect } from "next/navigation";
-const Employee = () => {
-  const { userLoggedIn } = useAuth();
+
+const ManagerSide = () => {
+
+  const {userLoggedIn} = useAuth();
 
   return (
     <AuthProvider>
         {userLoggedIn
-          ? redirect("/pages/Employee/pages/Schedule")
+          ? <></>
           : redirect("/")}
     </AuthProvider>
   );
 };
 
-export default Employee;
+export default ManagerSide;

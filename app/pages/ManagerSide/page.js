@@ -1,16 +1,79 @@
 "use client";
-import React from "react";
+import React from 'react';
 
-const ManagerSide = ({ children }) => {
+const Calendar = () => {
+  const daysInMonth = 31;  // Example for December
+  const firstDayIndex = new Date(2024, 4, 1).getDay();  // May 2024 starts on a Wednesday (index 3)
+
+  const createDayCell = (day) => {
+    if (!day) return <td key={day} className="border p-2 h-32"></td>;
+
+    return (
+      <td key={day} className="border p-2 h-32 align-top">
+        <div className="font-bold">{day}</div>
+        <div className="mt-1 text-sm p-1 rounded bg-blue-500 text-white">9am - 5pm</div>
+        <div className="mt-1 text-sm p-1 rounded bg-green-500 text-white">5pm - 12am</div>
+        <div className="mt-1 text-sm p-1 rounded bg-red-500 text-white">1am - 8am</div>
+      </td>
+    );
+  };
+
+  const generateCalendar = () => {
+    const rows = [];
+    let cells = [];
+    let day = 1;
+    // Used chatgpt to create the basic calendar Java iteration loop
+    // Create rows and cells for each day of the month using the outer loop and inner loop
+    for (let i = 0; i < 6; i++)  {
+      for (let j = 0; j < 7; j++) {
+        // Placeholder to loop 7 times for each day of the week
+        if (i === 0 && j < firstDayIndex) {
+          // I added this creates empty cell for the days before the first week
+          cells.push(createDayCell(null));
+        } else if (day > daysInMonth) {
+          // Also added the last day remaining cells to be filled with empty cell
+          cells.push(createDayCell(null));
+        } else {
+          cells.push(createDayCell(day));
+          day++;
+        }
+      }
+      rows.push(<tr key={i}>{cells}</tr>);
+      cells = [];
+    }
+    return rows;
+  };
+
   return (
-    <>
-      <div>
-        <nav className="bg-white h-20 w-screen" >
+    <main className="flex-1 p-96 bg-slate-500">
+      <div className="p-2">
+  <header className="flex justify-between items-center mb-2">
+    <button id="prevMonth" className="p-1 bg-gray-300 rounded">&lt;</button>
+    <h1 className="text-sm font-bold">May 2024</h1>
+    <button id="nextMonth" className="p-1 bg-gray-300 rounded">&gt;</button>
+  </header>
+  <table className="w-full border-collapse bg-white text-xs">
+    <thead>
+      <tr>
+        {/* Dont change (fixed) */}
+        <th className="border p-2 text-black">Sun</th>
+        <th className="border p-2 text-black">Mon</th>
+        <th className="border p-2 text-black">Tue</th>
+        <th className="border p-2 text-black">Wed</th>
+        <th className="border p-2 text-black">Thu</th>
+        <th className="border p-2 text-black">Fri</th>
+        <th className="border p-2 text-black">Sat</th>
+      </tr>
+    </thead>
+    <tbody>
+      {generateCalendar()}
+    </tbody>
+  </table>
+</div>
 
-        </nav>
-      </div>
-    </>
+      
+    </main>
   );
 };
 
-export default ManagerSide;
+export default Calendar;

@@ -1,5 +1,8 @@
 "use client";
 import React, { useState } from 'react';
+
+// Notes: Month doesnt change. Fix employee to shifts assign?
+
 // Created Calendar, that uses employee name and shifts, used chatgpt to fill the rest. But manually set a date as it is not auto
 const Calendar = () => {
   const daysInMonth = 31;  // Example for May
@@ -7,7 +10,12 @@ const Calendar = () => {
   const [employees, setEmployees] = useState([]);
   const [employeeName, setEmployeeName] = useState('');
   const [shift, setShift] = useState('');
-  
+  const [shiftHours, setShiftHours] = useState({
+    A: '9am - 5pm',
+    B: '5pm - 12am',
+    C: '1am - 8am'
+  });
+
   const addEmployee = (e) => {
     e.preventDefault();
     if (employeeName && shift) {
@@ -17,6 +25,13 @@ const Calendar = () => {
     }
   };
 
+  const handleHoursChange = (shift, newHours) => {
+    setShiftHours({
+      ...shiftHours,
+      [shift]: newHours
+    });
+  };
+
   // This is to create days for employees but may find another way to assign employees to days (ask)
   const createDayCell = (day) => {
     if (!day) return <td key={day} className="border p-2 h-32"></td>;
@@ -24,9 +39,9 @@ const Calendar = () => {
     return (
       <td key={day} className="border p-2 h-32 align-top">
         <div className="font-bold">{day}</div>
-        <div className="mt-1 text-sm p-1 rounded bg-blue-500 text-white">9am - 5pm</div>
-        <div className="mt-1 text-sm p-1 rounded bg-green-500 text-white">5pm - 12am</div>
-        <div className="mt-1 text-sm p-1 rounded bg-red-500 text-white">1am - 8am</div>
+        <div className="mt-1 text-sm p-1 rounded bg-blue-500 text-white">{shiftHours.A}</div>
+        <div className="mt-1 text-sm p-1 rounded bg-green-500 text-white">{shiftHours.B}</div>
+        <div className="mt-1 text-sm p-1 rounded bg-red-500 text-white">{shiftHours.C}</div>
         {employees.map((employee, index) => (
           <div key={index} className="mt-1 text-sm p-1 rounded bg-gray-500 text-white">
             {employee.name} - Shift {employee.shift}
@@ -70,7 +85,7 @@ const Calendar = () => {
           <h1 className="text-sm font-bold">May 2024</h1>
           <button id="nextMonth" className="p-1 bg-gray-300 rounded">&gt;</button>
         </header>
-        {/* Created Buttons for 3 shifts and filled the rest with chatgpt*/}
+        {/* Created Buttons for 3 shifts and filled the rest with chatgpt */}
         <form className="mb-4" onSubmit={addEmployee}>
           <input
             type="text"
@@ -102,6 +117,36 @@ const Calendar = () => {
           </button>
           <button type="submit" className="p-2 bg-gray-500 text-white">Add Employee</button>
         </form>
+        <div className="mb-4">
+          <h2 className="text-sm font-bold mb-2">Manage Shift Hours</h2>
+          <div className="mb-2">
+            <label className="mr-2">Shift A:</label>
+            <input
+              type="text"
+              className="border p-2 text-black"
+              value={shiftHours.A}
+              onChange={(e) => handleHoursChange('A', e.target.value)}
+            />
+          </div>
+          <div className="mb-2">
+            <label className="mr-2">Shift B:</label>
+            <input
+              type="text"
+              className="border p-2 text-black"
+              value={shiftHours.B}
+              onChange={(e) => handleHoursChange('B', e.target.value)}
+            />
+          </div>
+          <div className="mb-2">
+            <label className="mr-2">Shift C:</label>
+            <input
+              type="text"
+              className="border p-2 text-black"
+              value={shiftHours.C}
+              onChange={(e) => handleHoursChange('C', e.target.value)}
+            />
+          </div>
+        </div>
         <table className="w-full border-collapse bg-white text-xs">
           <thead>
             <tr>

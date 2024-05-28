@@ -1,10 +1,23 @@
 "use client";
-import React from 'react';
-
+import React, { useState } from 'react';
+// Created Calendar, that uses employee name and shifts, used chatgpt to fill the rest. But manually set a date as it is not auto
 const Calendar = () => {
-  const daysInMonth = 31;  // Example for December
+  const daysInMonth = 31;  // Example for May
   const firstDayIndex = new Date(2024, 4, 1).getDay();  // May 2024 starts on a Wednesday (index 3)
+  const [employees, setEmployees] = useState([]);
+  const [employeeName, setEmployeeName] = useState('');
+  const [shift, setShift] = useState('');
+  
+  const addEmployee = (e) => {
+    e.preventDefault();
+    if (employeeName && shift) {
+      setEmployees([...employees, { name: employeeName, shift }]);
+      setEmployeeName('');
+      setShift('');
+    }
+  };
 
+  // This is to create days for employees but may find another way to assign employees to days (ask)
   const createDayCell = (day) => {
     if (!day) return <td key={day} className="border p-2 h-32"></td>;
 
@@ -14,6 +27,11 @@ const Calendar = () => {
         <div className="mt-1 text-sm p-1 rounded bg-blue-500 text-white">9am - 5pm</div>
         <div className="mt-1 text-sm p-1 rounded bg-green-500 text-white">5pm - 12am</div>
         <div className="mt-1 text-sm p-1 rounded bg-red-500 text-white">1am - 8am</div>
+        {employees.map((employee, index) => (
+          <div key={index} className="mt-1 text-sm p-1 rounded bg-gray-500 text-white">
+            {employee.name} - Shift {employee.shift}
+          </div>
+        ))}
       </td>
     );
   };
@@ -45,33 +63,62 @@ const Calendar = () => {
   };
 
   return (
-    <main className="flex-1 p-96 bg-slate-500">
+    <main className="flex-1 p-12 bg-slate-500">
       <div className="p-2">
-  <header className="flex justify-between items-center mb-2">
-    <button id="prevMonth" className="p-1 bg-gray-300 rounded">&lt;</button>
-    <h1 className="text-sm font-bold">May 2024</h1>
-    <button id="nextMonth" className="p-1 bg-gray-300 rounded">&gt;</button>
-  </header>
-  <table className="w-full border-collapse bg-white text-xs">
-    <thead>
-      <tr>
-        {/* Dont change (fixed) */}
-        <th className="border p-2 text-black">Sun</th>
-        <th className="border p-2 text-black">Mon</th>
-        <th className="border p-2 text-black">Tue</th>
-        <th className="border p-2 text-black">Wed</th>
-        <th className="border p-2 text-black">Thu</th>
-        <th className="border p-2 text-black">Fri</th>
-        <th className="border p-2 text-black">Sat</th>
-      </tr>
-    </thead>
-    <tbody>
-      {generateCalendar()}
-    </tbody>
-  </table>
-</div>
-
-      
+        <header className="flex justify-between items-center mb-2">
+          <button id="prevMonth" className="p-1 bg-gray-300 rounded">&lt;</button>
+          <h1 className="text-sm font-bold">May 2024</h1>
+          <button id="nextMonth" className="p-1 bg-gray-300 rounded">&gt;</button>
+        </header>
+        {/* Created Buttons for 3 shifts and filled the rest with chatgpt*/}
+        <form className="mb-4" onSubmit={addEmployee}>
+          <input
+            type="text"
+            className="border p-2 mr-2 text-black"
+            placeholder="Employee Name"
+            value={employeeName}
+            onChange={(e) => setEmployeeName(e.target.value)}
+          />
+          <button
+            type="button"
+            className={`p-2 mr-2 ${shift === 'A' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            onClick={() => setShift('A')}
+          >
+            Shift A
+          </button>
+          <button
+            type="button"
+            className={`p-2 mr-2 ${shift === 'B' ? 'bg-green-500 text-white' : 'bg-gray-300'}`}
+            onClick={() => setShift('B')}
+          >
+            Shift B
+          </button>
+          <button
+            type="button"
+            className={`p-2 mr-2 ${shift === 'C' ? 'bg-red-500 text-white' : 'bg-gray-300'}`}
+            onClick={() => setShift('C')}
+          >
+            Shift C
+          </button>
+          <button type="submit" className="p-2 bg-gray-500 text-white">Add Employee</button>
+        </form>
+        <table className="w-full border-collapse bg-white text-xs">
+          <thead>
+            <tr>
+              <th className="border p-2 text-black">Sun</th>
+              <th className="border p-2 text-black">Mon</th>
+              <th className="border p-2 text-black">Tue</th>
+              <th className="border p-2 text-black">Wed</th>
+              <th className="border p-2 text-black">Thu</th>
+              <th className="border p-2 text-black">Fri</th>
+              <th className="border p-2 text-black">Sat</th>
+            </tr>
+          </thead>
+          <tbody>
+            {generateCalendar()}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 };

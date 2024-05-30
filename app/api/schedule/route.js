@@ -4,7 +4,7 @@ export async function POST(req){
 
     try{
         const data = await req.json();
-        const response = await fetch('http://127.0.0.1:8000/schedule', {
+        const response = await fetch('http://127.0.0.1:8000/scheduleJason', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {

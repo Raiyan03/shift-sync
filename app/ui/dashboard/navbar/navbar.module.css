@@ -1,0 +1,25 @@
+.container{
+    color: var(--text);
+    background-color: var(--bgSoft);
+    border-radius: 50px;
+    padding: 20px;
+    position: sticky;
+}
+
+.navItems{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:center;
+    gap: 20px;
+}
+
+.logout{
+    display: flex;
+    font-weight: bolder;
+    color: rgb(166, 20, 20);
+    position: absolute;
+    align-items: center;
+    gap: 5px;
+    right: 14px;
+}

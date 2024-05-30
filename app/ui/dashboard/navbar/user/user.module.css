@@ -1,0 +1,12 @@
+.container{
+    /* background-color: #91a19b; */
+    justify-content: center;
+    display: flex;
+    margin: auto;
+    flex-direction: row;
+    gap: 20px;
+    padding: 5px;
+    border-radius: 10px;
+    backdrop-filter: 10px;
+    color: #E0DFD5;
+}

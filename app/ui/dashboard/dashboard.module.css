@@ -1,0 +1,28 @@
+.container{
+    display: flex;
+}
+.content{
+    flex:4;
+    padding: 20px; 
+}
+
+.wrapper{
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    /* justify-content: center;
+    align-items: center; */
+}
+
+.main{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.cards{
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+}

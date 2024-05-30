@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-
+import ShiftTable from './components/shift-table';
 // Notes: Month doesnt change. Fix employee to shifts assign?
 
 // Created Calendar, that uses employee name and shifts, used chatgpt to fill the rest. But manually set a date as it is not auto
@@ -163,6 +163,7 @@ const Calendar = () => {
             {generateCalendar()}
           </tbody>
         </table>
+        <ShiftTable />
       </div>
     </main>
   );

@@ -27,10 +27,10 @@ const Schedule = () => {
   };
 
   return (
-    <div className="p-2 mt-2">
+    <div className="flex w-3/4 h-auto m-auto items-center justify-center p-2 mt-2">
       {schedule && (
         <div>
-          <table className="w-full table-fixed">
+          <table className="w-full table-fixed bg-bgSoft">
             <thead>
               <tr className="border-2 border-solid">
                 <td className="p-2 w-2/12 border-x-2">Name</td>
@@ -47,13 +47,7 @@ const Schedule = () => {
               <Table scheduleData={schedule} />
             </tbody>
           </table>
-          <button
-            className="flex bg-green-500 p-3 rounded-md"
-            onClick={fetchAndLogData}
-          >
-            Regenerate
-          </button>
-        </div>
+          </div>
       )}
 
       {!schedule && (

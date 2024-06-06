@@ -26,8 +26,9 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.main}>
+    <div className={styles.wrapper && "flex flex-col p-10 m-auto justify-center items-center align-middle"}>
+      <div className=" justify-center text-3xl font-bold m-5">Welcome to Shift Sync</div>
+      <div className={styles.main && ""}>
         {schedule &&
         <Cards employees={schedule.employees.length} />
       }

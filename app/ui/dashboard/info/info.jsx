@@ -9,8 +9,8 @@ export default function Info({name, company}) {
       <h2 className={styles.title}>Info</h2>
       </div>
       <div className={styles.data}>
-        <span className="flex">Name: John Doe</span>
-        <span>Organization: Harvey</span>
+        <span className="flex">Name: Fiedel Castro</span>
+        <span>Organization: Cuba</span>
         <span></span>
       </div>
     </div>

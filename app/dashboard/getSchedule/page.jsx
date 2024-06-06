@@ -4,8 +4,8 @@ import React from "react";
 
 export default function getSchedulePage() {
   return (
-    <div className="mt-5 justify-center align-middle items-center flex flex-col m-auto">
-        <h1 className="text-2xl font-bold">Generate Schedule</h1>
+    <div className="p-14 justify-center align-middle items-center flex flex-col h-full">
+        <h1 className="text-xl font-extrabold">Generate Schedule</h1>
       <Schedule />
     </div>
   );

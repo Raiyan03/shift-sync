@@ -25,6 +25,22 @@ export default function DashboardPage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (user)
+        firestore().collection("users").where("role", "==", (user?.role === "Employee" ? "Manager" : "Employee"))
+            .onSnapshot(users => {
+                if (!users.empty) {
+                    const USERS = []
+
+                    users.forEach(user => {
+                        USERS.push(user.data())
+                    })
+
+                    setUsers(USERS)
+                }
+            })
+}, [user])
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.main}>

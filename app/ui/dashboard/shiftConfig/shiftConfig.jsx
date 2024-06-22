@@ -24,7 +24,6 @@ function ShiftConfig() {
     const newShifts = [...shifts];
     newShifts[index][e.target.name] = e.target.value;
     setShifts(newShifts);
-    console.log(shifts);
   };
 
   const convert12 = (time) => {
@@ -47,16 +46,29 @@ function ShiftConfig() {
     return `${formattedHours}:${formattedMinutes} ${period}`;
   };
 
+  const timeStamp = (time) =>{
+    const dateObj =  new Date();
+
+    let [hours, minutes] = time.split(":");
+    hours = parseInt(hours, 10);
+    minutes = parseInt(minutes, 10);
+
+    dateObj.setMinutes(minutes);
+    dateObj.setHours(hours);
+
+    return dateObj.valueOf();
+
+  }
+
+
   const SubmitShifts = async () => {
     const finalArray = [];
 
-    shifts.map((shift, index) => {
-      finalArray.push(
-        `${convert12(shift.shiftStart)} - ${convert12(shift.shiftClose)}`
-      );
-    });
 
-    updateShifts("Ace Liquor", finalArray);
+    shifts.map((shift, index) => {
+      finalArray.push(`${timeStamp(shift.shiftStart)},${timeStamp(shift.shiftClose)}`);
+    });
+    await updateShifts("Ace Liquor", finalArray, parseInt(hoursOfOperation));
   };
 
   return (
@@ -67,6 +79,15 @@ function ShiftConfig() {
       </div>
       <div>
         <h2>Configure the required shifts:</h2>
+        <span className="flex gap-2 justify-center">
+              <label>Hour Bank:</label>
+              <input
+                value={hoursOfOperation}
+                onChange={(e) => setHoursOfOperation(e.target.value)}
+                type="number"
+                className="bg-transparent border-bg border-2 rounded-xl w-28"
+              />
+            </span>
       </div>
       <div className="flex flex-col p-[10px] gap-2">
         {/* <span className="flex gap-2 justify-around">

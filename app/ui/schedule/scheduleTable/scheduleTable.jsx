@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getScheduleData } from "@/app/lib/utilities";
+import { convertTimeStamps, getScheduleData } from "@/app/lib/utilities";
 import { filterShifts } from "@/app/lib/utilities";
 import Table from "./table";
 
@@ -20,11 +20,11 @@ const Schedule = () => {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 
-    console.log(data)
+
 
     const scheduleData = await res.json();
     // console.log(JSON.stringify(scheduleData));
-    // console.log(scheduleData)
+    console.log(scheduleData)
     const filteredSchedule = filterShifts(scheduleData);
     setSchedule(filteredSchedule);
   };

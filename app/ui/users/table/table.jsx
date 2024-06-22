@@ -21,9 +21,9 @@ export default function Table() {
   }, [employeeData]);
 
   return (
-    <table className="p-2 bg-bgSoft">
+    <table className="p-2 bg-bgSoft transition-all ease-in-out">
       <thead>
-        <tr className="border-solid border-2">
+        <tr className="border-solid border-2 transition-all ease-in-out duration-200">
           <td className="p-2 w-1/6 border-x-2 font-bold">Name</td>
           <td className="p-2 w-1/6 border-x-2 font-bold">Email</td>
           <td className="p-2 w-1/6 border-x-2 font-bold">Status</td>
@@ -56,7 +56,7 @@ export default function Table() {
             )
             
           })}
-        {!employeeData && (
+        {/* {!employeeData && (
           <tr className="border-solid border-2">
             <td className="p-2 border-x-2">None</td>
             <td className="p-2 border-x-2">none</td>
@@ -76,7 +76,7 @@ export default function Table() {
               </div>
             </td>
           </tr>
-        )}
+        )} */}
       </tbody>
     </table>
   );

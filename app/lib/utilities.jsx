@@ -55,21 +55,35 @@ export async function getScheduleData(organization) {
     employees.push({
       name: doc.data().name,
       shiftPref: {
-        Mon: doc.data().Mon,
-        Tue: doc.data().Tue,
-        Wed: doc.data().Wed,
-        Thu: doc.data().Thu,
-        Fri: doc.data().Fri,
-        Sat: doc.data().Sat,
-        Sun: doc.data().Sun,
+        Mon: doc.data().mon,
+        Tue: doc.data().tue,
+        Wed: doc.data().wed,
+        Thu: doc.data().thu,
+        Fri: doc.data().fri,
+        Sat: doc.data().sat,
+        Sun: doc.data().sun,
       },
     });
   });
 
+  const convert = (data)=>{
+    let [first, last] = data.split(",");
+    return [parseInt(first, 10), parseInt(last,10)]
+  }
+
+  const shiftsData = 
+    docSnapShifts.data().shifts.map((value, index)=>(
+        convert(value)
+    ))
+  
+
   const data = {
     employees,
-    shifts: docSnapShifts.data().shifts,
+    shifts: shiftsData,
+    hour_bank: docSnapShifts.data().hour_bank,
   };
+
+  console.log(data);
 
   return data;
 }
@@ -84,7 +98,7 @@ export function filterShifts(scheduleData) {
         employees[shift.employee] = new Array(daysOfWeek).fill("Not Working");
       }
       employees[shift.employee][day.day] = {
-        shift: shift.shift,
+        shift: convertTimeStamp(shift.shift),
         requested: shift.requested,
       };
     });
@@ -99,6 +113,46 @@ export function filterShifts(scheduleData) {
 
   return result;
 }
+
+export function convertTimeStamp(data){
+  if(!data){
+    return 
+  }
+  let[start, end] = [data[0], data[1]];
+  const startDate = new Date(parseInt(start, 10));
+
+  let startHours = startDate.getHours();
+  let startMin = parseInt("0" + startDate.getMinutes(), 10);
+
+  const period = startHours <= 12 ? "AM" : "PM";
+
+  // Adjust the hours for 12-hour format
+  startHours = startHours % 12;
+  startHours = startHours ? startHours : 12; // If hours is 0, set it to 12
+
+  // Format the hours and minutes to be always two digits
+  const startformattedHours = startHours < 10 ? "0" + startHours : startHours;
+  const startformattedMinutes = startMin < 10 ? "0" + startMin : startMin;
+
+  const endDate = new Date(parseInt(end, 10));
+
+  let endHours = endDate.getHours();
+  let endMins = parseInt("0" + endDate.getMinutes(), 10);
+
+  const period2 = endHours <= 12 ? "AM" : "PM";
+
+  // Adjust the hours for 12-hour format
+  endHours = endHours % 12;
+  endHours = endHours ? endHours : 12; // If hours is 0, set it to 12
+
+  // Format the hours and minutes to be always two digits
+  const endformattedHours = endHours < 10 ? "0" + endHours : endHours;
+  const endformattedMinutes = endMins < 10 ? "0" + endMins : endMins;
+  
+  // Return the formatted time
+  return `${startformattedHours}:${startformattedMinutes} ${period} - ${endformattedHours}:${endformattedMinutes} ${period2}`;
+}
+
 
 export async function getEmployeeData(organization) {
   let employees = [];
@@ -168,18 +222,42 @@ export async function deleteEmployee(organization, employeeId) {
   }
 }
 
-export async function updateShifts(organization, data) {
+export async function updateShifts(organization, data, hours) {
   const itemsRef = doc(db, `Organizations/${organization}`);
   const q = query(itemsRef)
 
   try{
     const snapShot = await getDoc(q)
     if(snapShot){
-      await setDoc(itemsRef, {shifts: data}, {merge: true})
+      // await setDoc(itemsRef, {shifts: []}, {merge: true})
+      await setDoc(itemsRef, {shifts: data, hour_bank: hours}, {merge: true})
       return "Shifts Updated Successfully"
     }
   }catch(error){
-    console.log("User Not Found")
+    console.log("User Not Found:", error)
   }
 
 }
+
+export async function addingLeaderAndTeam(teamName, data){
+
+  const itemRef = doc(db, teamName);
+  const q = query(itemRef, where("Id","==", teamName))
+
+  try
+  {
+    const snap = await getDoc(q)
+    if(snap.empty){
+      
+    }
+  }
+  catch(err)
+  { console.log("Error: ", err)}
+
+
+}
+
+
+export async function getUserFromDb(email, Password){
+  const userRef = doc()
+} 

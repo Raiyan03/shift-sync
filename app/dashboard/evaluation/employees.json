@@ -1,0 +1,88 @@
+[
+    {
+      "id": 4271,
+      "name": "Jack Miller",
+      "hoursWorked": {
+        "Monday": 8,
+        "Tuesday": 7.5,
+        "Wednesday": 8,
+        "Thursday": 7,
+        "Friday": 8,
+        "Saturday": 0,
+        "Sunday": 0
+      },
+      "employmentType": "Full-time"
+    },
+    {
+      "id": 2156,
+      "name": "Charlie Johnson",
+      "hoursWorked": {
+        "Monday": 4,
+        "Tuesday": 5.5,
+        "Wednesday": 4,
+        "Thursday": 5,
+        "Friday": 4,
+        "Saturday": 0,
+        "Sunday": 0
+      },
+      "employmentType": "Part-time"
+    },
+    {
+      "id": 3323,
+      "name": "Alice Williams",
+      "hoursWorked": {
+        "Monday": 5,
+        "Tuesday": 6,
+        "Wednesday": 5,
+        "Thursday": 0,
+        "Friday": 0,
+        "Saturday": 5,
+        "Sunday": 5
+      },
+      "employmentType": "Part-time"
+    },
+    {
+        "id": 4123,
+        "name": "Grace Browns",
+        "hoursWorked": {
+          "Monday": 8,
+          "Tuesday": 8,
+          "Wednesday": 7,
+          "Thursday": 8,
+          "Friday": 7,
+          "Saturday": 0,
+          "Sunday": 0
+        },
+        "employmentType": "Full-time"
+    },
+    {
+        "id": 3433,
+        "name": "Ivy Davis",
+        "hoursWorked": {
+          "Monday": 8,
+          "Tuesday": 8,
+          "Wednesday": 8,
+          "Thursday": 8,
+          "Friday": 8,
+          "Saturday": 0,
+          "Sunday": 0
+        },
+        "employmentType": "Full-time"
+    },
+    {
+        "id": 8638,
+        "name": "Ken Moore",
+        "hoursWorked": {
+          "Monday": 6,
+          "Tuesday": 5,
+          "Wednesday": 5,
+          "Thursday": 0,
+          "Friday": 0,
+          "Saturday": 5,
+          "Sunday": 0
+        },
+        "employmentType": "Part-time"
+      }
+
+  ]
+  

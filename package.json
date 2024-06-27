@@ -1,5 +1,5 @@
 {
-  "name": "admin-shift-sync",
+  "name": "shift-sync",
   "version": "0.1.0",
   "private": true,
   "scripts": {

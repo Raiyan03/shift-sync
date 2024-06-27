@@ -1,12 +1,21 @@
 "use client";
 import Schedule from "@/app/ui/schedule/scheduleTable/scheduleTable";
-import React from "react";
+import { useState } from "react";
+import Evaluation from "@/app/ui/dashboard/evaluation/evaluation";
 
 export default function getSchedulePage() {
+  const [schedule, setSchedule] = useState();
+  const [hourDetail, setHourDetail] = useState();
   return (
-    <div className="mt-5 justify-center align-middle items-center flex flex-col m-auto">
-        <h1 className="text-2xl font-bold">Generate Schedule</h1>
-      <Schedule />
+    <div className="p-14 justify-center align-middle items-center flex flex-col h-full">
+      <h1 className="text-xl font-extrabold">Generate Schedule</h1>
+      <Schedule
+        schedule={schedule}
+        setSchedule={setSchedule}
+        hourDetail={hourDetail}
+        setHourDetail={setHourDetail}
+      />
+      {schedule && <Evaluation scheduleData={hourDetail} />}
     </div>
   );
 }

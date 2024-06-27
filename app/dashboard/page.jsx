@@ -1,51 +1,55 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { getScheduleData } from "../lib/utilities";
 import Cards from "../ui/dashboard/cards/cards";
-import styles from "../ui/dashboard/dashboard.module.css";
 import Info from "../ui/dashboard/info/info";
+import ShiftConfig from "../ui/dashboard/shiftConfig/shiftConfig";
+import Link from "next/link";
+import { getUser } from "@/action/actions.ts";
 
 export default function DashboardPage() {
   const [schedule, setSchedule] = useState();
-  const [user, setUser] = useState(null); // Define and initialize user state
+  const [load, setLoad] = useState(false);
+  const [userId, setUserId] = useState();
 
   const fetchData = async () => {
-    const scheduleData = await getScheduleData("Ace Liquor");
+    // const res = await fetch("api/getPreference");
+    // if (!res.ok) {
+    //   throw new Error("HTTP error");
+    // }
+
+    // const scheduleData = await res.json();
+    
+    const userData = await getUser();
+    const scheduleData = await getScheduleData(userData.id);
+
+    setUserId(userData.id)
     setSchedule(scheduleData);
   };
 
   useEffect(() => {
     fetchData();
+    setLoad(true)
   }, []);
 
-  useEffect(() => {
-    // Example of using user state
-    if (user) {
-      firestore()
-        .collection("users")
-        .where("role", "==", user.role === "Employee" ? "Manager" : "Employee")
-        .onSnapshot((users) => {
-          if (!users.empty) {
-            const USERS = [];
-            users.forEach((user) => {
-              USERS.push(user.data());
-            });
-            // Assuming setUsers is defined elsewhere to update state
-            setUsers(USERS);
-          }
-        });
-    }
-  }, [user]);
-
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.main}>
-        {schedule && <Cards employees={schedule.employees.length} />}
-        {!schedule && <Cards employees="10" />}
+    <div className={`m-10 transition-all duration-500 delay-75 ease-in  ${load? "visible scale-100" : "invisible translate-y-20"}`}>
+      <div className={`flex justify-center text-3xl font-bold m-5 transition ease-in-out delay-150 duration-500 ${load? "" :"scale-0"} `}>
+        Welcome to Shift Sync
       </div>
-      <div className={styles.info}>
-        <Info />
+      <div className="flex p-10 justify-around">
+        <div className={`flex  flex-col p-10 transition-all duration-75 `}>
+          <div className="flex p-5 gap-5 ">
+            {schedule && <Cards employees={schedule.employees.length} />}
+            {!schedule && <Cards employees=" " />}
+          </div>
+          <div className="p-5 flex">
+              {/* <Info /> */}
+          </div>
+        </div>
+        <div className="p-5 flex justify-center items-center">
+          <ShiftConfig id={userId} />
+        </div>
       </div>
     </div>
   );

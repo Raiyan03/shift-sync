@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import TableData from "./table-data/tableData";
-import styles from "./table.module.css";
 import { getScheduleData } from "@/app/lib/utilities";
+import { getUser } from "@/action/actions";
 
 export default function Table() {
   const [schedule, setSchedule] = useState();
@@ -14,12 +14,15 @@ export default function Table() {
     // }
 
     // const scheduleData = await res.json();
+    const userData = await getUser();
+    const temp = userData.id
+    console.log(temp)
+    const scheduleData = await getScheduleData(temp);
 
-    const scheduleData = await getScheduleData("Ace Liquor");
+    if(scheduleData !== null){
+      setSchedule(scheduleData);
+    }
 
-    console.log(scheduleData);
-
-    setSchedule(scheduleData);
   };
 
   useEffect(() => {
@@ -27,7 +30,7 @@ export default function Table() {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className="flex w-3/4 h-auto m-auto items-center justify-center justify-items-center">
       {schedule && (
         <div>
             <h1 className="flex justify-center m-4 text-xl font-extrabold">Employee Preferences</h1>

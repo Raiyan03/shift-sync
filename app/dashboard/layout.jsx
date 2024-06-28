@@ -1,10 +1,17 @@
+import { redirect } from "next/navigation";
+import { getSession } from "../lib/getSession";
 import Navbar from "../ui/dashboard/navbar/navbar";
-import styles from "@/app/ui/dashboard/dashboard.module.css";
 
-export default function Layout({ children }) {
-  return (
-    <div className={styles.container}>
-      <div className={styles.content}>
+export default async function Layout({ children }) {
+  
+  const session = await getSession();
+  const user = session?.user;
+
+  if(!user) return redirect("/login")
+
+  return (  
+    <div>
+      <div className="flex-4">
         <Navbar />
         {children}
       </div>

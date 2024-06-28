@@ -3,12 +3,14 @@ import Link from "next/link";
 import React from "react";
 import { Md6K, MdArrowBack } from "react-icons/md";
 
-export default function SingleUserPage() {
+export default function SingleUserPage({params}) {
+  const {id} = params;
+
   return (
     <div className="bg-bgSoft p-5 rounded-md mt-5 h-full">
+      {console.log(id)}
       <div>
         <Link href="/dashboard/users/">
-          {" "}
           <MdArrowBack size={24} />
         </Link>
       </div>

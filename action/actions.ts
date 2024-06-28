@@ -19,7 +19,6 @@ const loginUser = async (formData: FormData) =>{
         email: email,
         password: password,
        })
-       return true;
     }catch(error){
         const someError =error as CredentialsSignin
         throw someError

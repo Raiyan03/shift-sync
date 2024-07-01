@@ -12,7 +12,6 @@ const loginUser = async (formData: FormData) =>{
     const password = formData.get('password');
 
     try{
-
        await signIn('credentials',{
         redirect: false,
         callbackUrl: '/',

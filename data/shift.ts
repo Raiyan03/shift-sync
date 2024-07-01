@@ -13,17 +13,26 @@ import {
   query,
 } from "firebase/firestore";
 
-export async function getShiftConfig(id:string) {
-    const docRef = doc(db, `Organizations`, id)
+export async function getUserData(userId:string) {
+    const collQuery = query(collection(db, `Organizations`))
 
     try{
-        const docSnap = await getDoc(docRef)
-        if(docSnap.exists){
-            return docSnap.data();
+        const docSnap = await getDocs(collQuery)
+        if(!docSnap.empty){
+            for(const docData of docSnap.docs){
+                if(docData.data().id.includes(userId.slice(0,4))){
+                    const userQuery = doc(db, `Organizations/${docData.data().id}/employees`, userId)
+                    const userSnap = await getDoc(userQuery)
+
+                    if(userSnap.exists()){
+                        return userSnap.data()
+                    }
+                }
+            }
         }
 
     }catch(err){
-        console.log("Shift Data Not Found", err)
+        console.log("User Data Not Found", err)
     }
 
 }

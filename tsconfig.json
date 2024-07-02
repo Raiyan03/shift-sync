@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "data/user.js"  ],
+, "data/user.js", "middleware.js"  ],
   "exclude": [
     "node_modules"
   ]

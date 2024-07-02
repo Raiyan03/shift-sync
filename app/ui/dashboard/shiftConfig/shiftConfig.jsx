@@ -1,7 +1,7 @@
 "use client";
 import { getUser } from "@/action/actions";
 import { updateShifts } from "@/app/lib/utilities";
-import { getShiftConfig } from "@/data/shift";
+import { getUserData } from "@/data/shift";
 import React, { useEffect, useState } from "react";
 import { MdApps } from "react-icons/md";
 
@@ -17,7 +17,7 @@ function ShiftConfig({ id }) {
 
   const getAndLogShiftData = async () => {
     const user = await getUser();
-    const shiftData = await getShiftConfig(user.id);
+    const shiftData = await getUserData(user.id);
 
     setHoursOfOperationP(shiftData.hour_bank);
 

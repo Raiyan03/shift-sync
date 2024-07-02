@@ -18,4 +18,4 @@ export const authRoutes = [
     '/auth/register',
 ]
 
-export const DEFAULT_MANAGER_ROUTE = "/dashboard"
+export const DEFAULT_MANAGER_ROUTE = "/manager/dashboard"

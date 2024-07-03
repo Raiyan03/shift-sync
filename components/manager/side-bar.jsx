@@ -11,17 +11,17 @@ const navbarItems = {
   list: [
     {
       title: "Dashboard",
-      path: "/dashboard",
+      path: "/manager/dashboard",
       icon: <MdDashboard />,
     },
     {
       title: "Employees",
-      path: "/dashboard/users",
+      path: "/manager/employees",
       icon: <MdOutlineSupervisedUserCircle />,
     },
     {
-      title: "Employee Preferences",
-      path: "/dashboard/schedule",
+      title: "Availability",
+      path: "/manager/availability",
       icon: <MdSchedule />,
     },
     {

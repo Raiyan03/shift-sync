@@ -1,5 +1,5 @@
 "use Server";
-import { db } from "@/app/lib/firebase";
+import { db } from "@/lib/firebase";
 import { hash, compare } from "bcryptjs";
 
 import {
@@ -287,7 +287,7 @@ export async function getUserFromDB(email, password) {
       }
     });
   }
-
+  console.log(user[0]);
   return user[0];
 }
 

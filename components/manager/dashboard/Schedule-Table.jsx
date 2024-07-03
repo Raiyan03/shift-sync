@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getUser } from '@/action/actions';
-import { convertTimeStamps, filterShifts, getScheduleData } from "@/app/lib/utilities";
-import Table from "@/components/manager/table"
+import { convertTimeStamps, filterShifts, getScheduleData } from "@/lib/utilities";
+import Table from "@/components/manager/dashboard/table"
 import { ClipLoader, MoonLoader } from 'react-spinners';
 const ScheduleTable = ({Schedule, Loading, setLoading, setSchedule}) => {
     const fetchAndLogData = async () => {
@@ -30,7 +30,7 @@ const ScheduleTable = ({Schedule, Loading, setLoading, setSchedule}) => {
         // fetchAndLogData();
     return (
         Schedule ? (
-        <div className="mt-4 flex flex-col bg-secondary border shadow-md rounded-lg p-4">
+        <div className=" flex flex-col bg-secondary border shadow-md rounded-lg p-4">
             <h1 className='text-xl text-accent1 py-3'>
                 Schedule for this week
             </h1>

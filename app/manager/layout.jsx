@@ -22,7 +22,7 @@ const ManagerLayout = ({ children }) => {
             } md:hidden`} onClick={() => setIsOpen(false)}></div>
             <div className="flex flex-col w-full p-3 gap-3">
                 <Navbar className=" fixed" toggleSidebar={toggleSidebar} />
-                <main className=" ">
+                <main className=" min-h-screen">
                     {children}
                 </main>
             </div>

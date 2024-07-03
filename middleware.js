@@ -12,9 +12,14 @@ export default auth((req) => {
     const isAuthRoute = authRoutes.includes(nextUrl.pathname); 
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 
+    if (isPublicRoute && isLoggedIn){
+        return Response.redirect( new URL(DEFAULT_MANAGER_ROUTE, nextUrl ));
+    }
+
     if (isAuthRoute){
         if (isLoggedIn){
-            return Response.redirect( new URL(DEFAULT_MANAGER_ROUTE, nextUrl ))
+            console.log("User is already logged in");
+            return Response.redirect( new URL(DEFAULT_MANAGER_ROUTE, nextUrl ));
         }
         return null;
     }

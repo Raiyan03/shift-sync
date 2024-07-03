@@ -71,7 +71,7 @@ export default function Shifts({ day, setPreference }) {
     <select
       name={day}
       value={pref}
-      className="bg-bg border-2 border-teal-700 rounded-xl p-3 text-text mt-3"
+      className="bg-transparent border-2 border-primary rounded-xl p-3 text-black mt-3"
       onChange={(e) => {setPreference(e.target.value); console.log(e.target.value)}}
       required
     >

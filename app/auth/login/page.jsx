@@ -4,7 +4,7 @@ export default function LoginPage() {
   return (
     <div className="bg-white flex flex-col gap-10 rounded-lg sm:w-1/2 md:w-[30%] border shadow-xl text-primary items-center justify-center p-4">
         <h1 className="text-2xl font-bold text-center">Welcome to Shift sync!</h1>
-        <form action={loginUser} className=" flex flex-col gap-y-8">
+        <form action={ loginUser } className=" flex flex-col gap-y-8">
             <h2 className="text-xl font-bold text-center">
                 Login
             </h2>

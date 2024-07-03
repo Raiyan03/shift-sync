@@ -20,7 +20,7 @@ export default function Table() {
 
   useEffect(() => {
     fetchData();
-  }, [employeeData]);
+  }, []);
 
   return (
     <table className="p-2 bg-bgSoft transition-all ease-in-out">

@@ -1,6 +1,6 @@
 "use client";
 import { getUser } from "@/action/actions";
-import { updateShifts } from "@/app/lib/utilities";
+import { updateShifts } from "@/lib/utilities";
 import { getUserData } from "@/data/shift";
 import React, { useEffect, useState } from "react";
 import { MdApps } from "react-icons/md";
@@ -17,8 +17,10 @@ function ShiftConfig({ id }) {
 
   const getAndLogShiftData = async () => {
     const user = await getUser();
+    console.log(user)
+    console.log(user.id);
     const shiftData = await getUserData(user.id);
-
+    console.log(shiftData);
     setHoursOfOperationP(shiftData.hour_bank);
 
     shiftData.shifts.map((shift, index) => {
@@ -107,7 +109,7 @@ function ShiftConfig({ id }) {
   };
 
   return (
-    <div className="flex flex-col bg-bgSoft p-5 rounded-lg gap-2.5 shadow-2xl">
+    <div className="flex flex-col border shadow-md p-5 rounded-lg gap-2.5 ">
       <div className="flex gap-3">
         <MdApps size={32} />
         <h2 className="text-xl">Shift Config</h2>
@@ -120,7 +122,7 @@ function ShiftConfig({ id }) {
             value={hoursOfOperation}
             onChange={(e) => setHoursOfOperation(e.target.value)}
             type="number"
-            className="bg-transparent border-bg border-2 rounded-xl w-28"
+            className="bg-transparent border-primary border-2 rounded-md w-28"
             placeholder={hoursOfOperationP}
           />
         </span>
@@ -148,7 +150,7 @@ function ShiftConfig({ id }) {
                 value={openTime}
                 onChange={(e) => setOpenTime(e.target.value)}
                 type="time"
-                className="bg-transparent border-bg border-2 rounded-xl w-28"
+                className="bg-transparent border-primary border-2 rounded-md w-28"
               />
             </span>
             <span className="flex gap-2 justify-around">
@@ -157,7 +159,7 @@ function ShiftConfig({ id }) {
                 value={closeTime}
                 onChange={(e) => setCloseTime(e.target.value)}
                 type="time"
-                className="bg-transparent border-bg border-2 rounded-xl w-28"
+                className="bg-transparent border-primary border-2 rounded-md w-28"
               />
             </span>
           </>
@@ -173,7 +175,7 @@ function ShiftConfig({ id }) {
         </span> */}
 
         <button
-          className="flex hover:bg-teal-700 transition-transform delay-900 bg-teal-900 w-20 items-center justify-center m-auto p-[3px] rounded-[13px]"
+          className="flex  transition-transform delay-900 bg-primary text-white items-center justify-center m-auto p-[3px] rounded-md"
           onClick={addShifts}
         >
           Add Shift
@@ -191,10 +193,10 @@ function ShiftConfig({ id }) {
         {shifts.map((shift, index) => (
           <div
             key={index}
-            className="transition-all delay-500 duration-1000 border p-4 rounded-2xl border-teal-900"
+            className="transition-all items delay-500 duration-1000 border p-4 rounded-2xl border-primary"
           >
             <h2 className="text-lg text-center">Shift: {index + 1}</h2>
-            <div className="flex items-end space-x-4 pb-4 pt-2">
+            <div className="flex justify-around space-x-4 pb-4 pt-2">
               <span className="flex gap-2 justify-around">
                 <label>Shift Start:</label>
                 <input
@@ -202,7 +204,7 @@ function ShiftConfig({ id }) {
                   name={`shiftStart`}
                   onChange={(e) => handleChanges(e, index)}
                   type="time"
-                  className="bg-transparent border-bg border-2 rounded-xl w-28"
+                  className="bg-transparent border-primary border-2 rounded-md w-28"
                   step="1800"
                   required
                 />
@@ -215,7 +217,7 @@ function ShiftConfig({ id }) {
                   onChange={(e) => handleChanges(e, index)}
                   type="time"
                   min={shift.shiftStart}
-                  className="bg-transparent border-bg border-2 rounded-xl w-28"
+                  className="bg-transparent border-primary border-2 rounded-md w-28"
                   step="1800"
                   required
                 />
@@ -224,7 +226,7 @@ function ShiftConfig({ id }) {
                 <button
                   type="button"
                   onClick={() => removeShift(index)}
-                  className="justify-center items-center align-middle bg-teal-900 p-1 rounded-md hover:bg-red-700 transition duration-100"
+                  className="justify-center items-center align-middle bg-primary text-white p-3 rounded-md hover:bg-red-500 transition duration-100 ease-in"
                 >
                   Remove
                 </button>
@@ -233,7 +235,7 @@ function ShiftConfig({ id }) {
           </div>
         ))}
         <button
-          className="flex  hover:bg-teal-700 transition-transform delay-900 bg-teal-900 items-center justify-center m-auto p-2 rounded-[13px]"
+          className="flex transition-transform delay-900 bg-primary text-white items-center justify-center m-auto p-2 rounded-md"
           onClick={SubmitShifts}
         >
           Submit Shifts

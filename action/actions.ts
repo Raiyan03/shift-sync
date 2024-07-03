@@ -1,18 +1,17 @@
 "use server"
 import { signIn, signOut } from "@/auth"
-import { db } from "@/app/lib/firebase"
-import { saltAndHashPassword } from "@/app/lib/utilities"
+import { db } from "@/lib/firebase"
+import { saltAndHashPassword } from "@/lib/utilities"
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore"
 import { CredentialsSignin } from "next-auth"
 import { redirect } from "next/navigation"
-import { getSession } from "@/app/lib/getSession"
+import { getSession } from "@/lib/getSession"
 
 const loginUser = async (formData: FormData) =>{
     const email = formData.get('email');
     const password = formData.get('password');
 
     try{
-
        await signIn('credentials',{
         redirect: false,
         callbackUrl: '/',

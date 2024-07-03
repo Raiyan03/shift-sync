@@ -1,7 +1,7 @@
 "use client";
 import Schedule from "@/app/ui/schedule/scheduleTable/scheduleTable";
 import { useState } from "react";
-import Evaluation from "@/app/ui/dashboard/evaluation/evaluation";
+import Evaluation from "@/components/manager/evaluation/evaluation" 
 
 export default function getSchedulePage() {
   const [schedule, setSchedule] = useState();

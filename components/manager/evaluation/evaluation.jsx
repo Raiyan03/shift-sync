@@ -4,7 +4,7 @@ import React, { useState } from 'react';
  passed in the entire code to GPT to read the json object efficiently
 */
 import './evaluation.css';
-export default function Evaluation({ scheduleData}) {
+export default function Evaluation({ scheduleData }) {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
   const [totalHours, setTotalHours] = useState(0);

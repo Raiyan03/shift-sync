@@ -1,7 +1,7 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 // import Credentials from "next-auth/providers/credentials";
 import Credentials from "next-auth/providers/credentials";
-import { saltAndHashPassword, getUserFromDB } from "@/app/lib/utilities";
+import { saltAndHashPassword, getUserFromDB } from "@/lib/utilities";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [

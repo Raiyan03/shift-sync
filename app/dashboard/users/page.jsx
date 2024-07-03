@@ -3,7 +3,6 @@ import { getEmployeeData } from "@/app/lib/utilities";
 import Pagination from "@/app/ui/users/pagination/pagination";
 import Table from "@/app/ui/users/table/table";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export default function Users() {
   return (

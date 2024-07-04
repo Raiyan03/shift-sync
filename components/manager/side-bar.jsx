@@ -1,6 +1,6 @@
 "use client"
 
-import { MdDashboard, MdOutlineSupervisedUserCircle, MdSchedule, MdGasMeter, MdLogout } from "react-icons/md";
+import { MdDashboard, MdOutlineSupervisedUserCircle, MdSchedule, MdGasMeter, MdLogout, MdQrCode } from "react-icons/md";
 import NavLinks from "@/components/manager/nav-links";
 import Link from "next/link";
 import UserBatch from "@/components/manager/user";
@@ -29,6 +29,12 @@ const navbarItems = {
       path: "/dashboard/getSchedule",
       icon: <MdGasMeter />,
     },
+    {
+      title: "QR Code",
+      path: "/manager/qr-code",
+      icon: <MdQrCode />,
+    }
+
   ],
 };
 

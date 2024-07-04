@@ -1,5 +1,5 @@
 "use server"
-import { signIn, signOut } from "@/auth"
+import { auth, signIn, signOut } from "@/auth"
 import { db } from "@/lib/firebase"
 import { saltAndHashPassword } from "@/lib/utilities"
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore"
@@ -17,12 +17,13 @@ const loginUser = async (formData: FormData) =>{
         callbackUrl: '/',
         email: email,
         password: password,
-       })
+       });
+       console.log("User Logged In Successfully")
     }catch(error){
         const someError =error as CredentialsSignin
         throw someError
     }
-    redirect('/')
+    redirect("/");
 }
 
 
@@ -66,13 +67,13 @@ const registerUser = async (formData: FormData)=>{
     } catch (error) {   
         throw new Error(error)
     }
+
     redirect('/login');
 
 }
 
 const logOutUser = async() => {
-    await signOut()
-    redirect('/auth/login')
+    await signOut({redirectTo: '/auth/login'})
 }
 
 const getUser = async()=>{

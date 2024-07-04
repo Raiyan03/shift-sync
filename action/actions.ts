@@ -71,8 +71,9 @@ const registerUser = async (formData: FormData)=>{
 }
 
 const logOutUser = async() => {
-    await signOut()
-    redirect('/auth/login')
+    await signOut({
+        redirect: true
+    })
 }
 
 const getUser = async()=>{

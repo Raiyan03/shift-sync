@@ -1,6 +1,21 @@
 "use client"
+import { getUser } from "@/action/actions"
 import Image from "next/image"
+import { useEffect, useState } from "react"
 export default function UserBatch (){
+    const [name, setName] = useState()
+    const [position, setPosition] = useState()
+    
+    const fetch = async ()=>{
+        const user = await getUser()
+        if(user.id !== undefined){
+            setName(user.name)
+            setPosition(user.role)
+        }
+    }
+    useEffect(()=>{
+        fetch()
+    },[])
 
     return (
         <div className=" flex 
@@ -17,9 +32,9 @@ export default function UserBatch (){
         active:shadow-md active:bg-gray-200">
             <Image src={"/user.png"} width={50} height={80} alt={"user icon"} />
             <div>
-                <h1 className="text-xl font-semibold"> Admin manager </h1>
+                <h1 className="text-xl font-semibold"> {name? `${name}`: ""} </h1>
                 <p className="text-accent1">
-                    Organization: xyz store
+                    Position : {position? `${position}`: ""}
                 </p>
             </div>
         </div>

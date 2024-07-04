@@ -17,8 +17,6 @@ function ShiftConfig({ id }) {
 
   const getAndLogShiftData = async () => {
     const user = await getUser();
-    console.log(user)
-    console.log(user.id);
     const shiftData = await getUserData(user.id);
     console.log(shiftData);
     setHoursOfOperationP(shiftData.hour_bank);

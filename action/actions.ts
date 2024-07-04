@@ -23,7 +23,6 @@ const loginUser = async (formData: FormData) =>{
         throw someError
     }
     redirect('/')
-
 }
 
 
@@ -73,6 +72,7 @@ const registerUser = async (formData: FormData)=>{
 
 const logOutUser = async() => {
     await signOut()
+    redirect('/auth/login')
 }
 
 const getUser = async()=>{

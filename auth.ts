@@ -1,7 +1,8 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 // import Credentials from "next-auth/providers/credentials";
 import Credentials from "next-auth/providers/credentials";
-import { saltAndHashPassword, getUserFromDB } from "@/lib/utilities";
+import { saltAndHashPassword } from "@/lib/utilities";
+import { getUserFromDB } from '@/data/user'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -31,6 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("Invalid User Name or Password")
         }
 
+        console.log(user)
         return user;
       },
     }),

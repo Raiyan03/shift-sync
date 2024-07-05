@@ -14,6 +14,7 @@ const loginUser = async (formData: FormData) =>{
     try{
        await signIn('credentials',{
         redirect: false,
+        redirectTo: '/',
         callbackUrl: '/',
         email: email,
         password: password,
@@ -37,7 +38,7 @@ const registerUser = async (formData: FormData)=>{
     
     const id = Math.floor(Math.random() * 100000);
 
-    const realId = `${teamName.slice(0,4).toLowerCase()}-${5}${id}`;
+    const realId = `${teamName.slice(0,6).toLowerCase()}-${5}${id}`;
 
     const hashedPassword = await saltAndHashPassword(password)
     
@@ -55,7 +56,9 @@ const registerUser = async (formData: FormData)=>{
             await setDoc(doc(db, `Organizations/`, realId),{
                 name: name,
                 email: email,
+                organization: teamName,
                 password: hashedPassword,
+                role: "manager",
                 id: realId
             })
             console.log("User Registered Successfully")
@@ -68,7 +71,7 @@ const registerUser = async (formData: FormData)=>{
         throw new Error(error)
     }
 
-    redirect('/login');
+    redirect('/auth/login');
 
 }
 

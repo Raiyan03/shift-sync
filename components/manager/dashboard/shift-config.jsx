@@ -1,7 +1,7 @@
 "use client";
 import { getUser } from "@/action/actions";
 import { updateShifts } from "@/lib/utilities";
-import { getUserData } from "@/data/shift";
+import { getShiftData, getUserData } from "@/data/shift";
 import React, { useEffect, useState } from "react";
 import { MdApps } from "react-icons/md";
 
@@ -17,53 +17,54 @@ function ShiftConfig({ id }) {
 
   const getAndLogShiftData = async () => {
     const user = await getUser();
-    console.log(user)
-    console.log(user.id);
-    const shiftData = await getUserData(user.id);
-    console.log(shiftData);
-    setHoursOfOperationP(shiftData.hour_bank);
-
-    shiftData.shifts.map((shift, index) => {
-      let [start, end] = shift.split(",");
-
-      const startDate = new Date(parseInt(start, 10));
-
-      let startHours = startDate.getHours();
-      let startMin = parseInt("0" + startDate.getMinutes(), 10);
-
-      const startformattedHours =
-        startHours < 10 ? "0" + startHours : startHours;
-      const startformattedMinutes = startMin < 10 ? "0" + startMin : startMin;
-
-      let startTime =
-        startformattedHours + ":" + startformattedMinutes.substr(-2);
-
-
-        const endDate = new Date(parseInt(end, 10));
-
-        let endHours = endDate.getHours();
-        let endMin = parseInt("0" + endDate.getMinutes(), 10);
+    if(user !== undefined){
+      const shiftData = await getShiftData(user.id);
+      let newShift = [...shifts];
+      if (shiftData != null) {
+        setHoursOfOperationP(shiftData.hour_bank);
   
-        const endformattedHours =
-          endHours < 10 ? "0" + endHours : endHours;
-        const endformattedMinutes = endMin < 10 ? "0" + endMin : endMin;
+        shiftData.shifts.map((shift, index) => {
+          let [start, end] = shift.split(",");
   
-        let endTime =
-        endformattedHours + ":" + endformattedMinutes.substr(-2);
-
-        const newShift = [...shifts];
-      if (newShift[index]) {
-        newShift[index][`shiftStart`] = startTime;
-        newShift[index][`shiftClose`] = endTime;
-      }else{
-        newShift[index] = {
-          ['shiftStart']: startTime,
-          ['shiftClose']: endTime
-        }
-
-      }
+          const startDate = new Date(parseInt(start, 10));
+  
+          let startHours = startDate.getHours();
+          let startMin = parseInt("0" + startDate.getMinutes(), 10);
+  
+          const startformattedHours =
+            startHours < 10 ? "0" + startHours : startHours;
+          const startformattedMinutes = startMin < 10 ? "0" + startMin : startMin;
+  
+          let startTime =
+            startformattedHours + ":" + startformattedMinutes;
+  
+          const endDate = new Date(parseInt(end, 10));
+  
+          let endHours = endDate.getHours();
+          let endMin = parseInt("0" + endDate.getMinutes(), 10);
+  
+          const endformattedHours = endHours < 10 ? "0" + endHours : endHours;
+          const endformattedMinutes = endMin < 10 ? "0" + endMin : endMin;
+  
+          let endTime = endformattedHours + ":" + endformattedMinutes;
+  
+          const newShiftData= newShift;
+          if (newShiftData[index]) {
+            newShiftData[index][`shiftStart`] = startTime;
+            newShiftData[index][`shiftClose`] = endTime;
+          } else {
+            newShiftData[index] = {
+              ["shiftStart"]: startTime,
+              ["shiftClose"]: endTime,
+            };
+          }
+          newShift = newShiftData
+        });
       setShifts(newShift);
-    });
+  
+      }
+    }
+    
   };
 
   useEffect(() => {
@@ -213,7 +214,7 @@ function ShiftConfig({ id }) {
                 <label>Shift Close:</label>
                 <input
                   name={`shiftClose`}
-                  value={shift.closeTime}
+                  value={shift.shiftClose}
                   onChange={(e) => handleChanges(e, index)}
                   type="time"
                   min={shift.shiftStart}

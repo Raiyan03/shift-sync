@@ -8,8 +8,8 @@ export default function LoginPage() {
             <h2 className="text-xl font-bold text-center">
                 Login
             </h2>
-            <input type="text" name="email" className="p-2 border-2 border-primary rounded-lg bg-inherit text-black" placeholder="Email"/>
-            <input type="password" name="password" className="p-2 border-2 border-primary rounded-lg bg-inherit text-black" placeholder="Password"/>
+            <input type="text" name="email" className="p-2 border-2 border-primary rounded-lg bg-inherit text-black" placeholder="Email" required/>
+            <input type="password" name="password" className="p-2 border-2 border-primary rounded-lg bg-inherit text-black" placeholder="Password" required/>
             <button type="submit" className='bg-primary p-3 text-white rounded-lg'>Log In</button>
         </form>
         <Link href="/auth/register" className=" underline">

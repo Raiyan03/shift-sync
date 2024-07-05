@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { getUser } from '@/action/actions';
 import { useState, useEffect } from 'react';
 import SearchBar from "@/components/manager/employees/search"
-import { getEmployeeData } from '@/lib/utilities';
+import { deleteEmployee, getEmployeeData } from '@/lib/utilities';
 const UserTable = ({ employeeData, setEmployeeData }) => {
   console.log(employeeData);
     const [data, setData] = useState(employeeData);
@@ -15,11 +15,12 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
             <table className="w-full">
                 <thead>
                     <tr>
+                        <td className="p-2 font-bold">Id</td>
                         <td className="p-2 font-bold">Name</td>
                         <td className="p-2 font-bold">Email</td>
                         <td className="p-2 font-bold">Joined on</td>
                         <td className="p-2 font-bold">Status</td>
-                        <td className="p-2 font-bold">Action</td>
+                        <td className="p-2 font-bold text-center">Action</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,7 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
           employeeData?.employees.map((value, index) => {
             return(
               <tr key={index} className="border-solid ">
+                <td className="p-2 ">{value.Id}</td>
                 <td className="p-2 ">{value.name}</td>
                 <td className="p-2 ">{value.email}</td>
                 <td>

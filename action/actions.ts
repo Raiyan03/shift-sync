@@ -1,5 +1,5 @@
 "use server"
-import { signIn, signOut } from "@/auth"
+import { auth, signIn, signOut } from "@/auth"
 import { db } from "@/lib/firebase"
 import { saltAndHashPassword } from "@/lib/utilities"
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore"
@@ -14,16 +14,17 @@ const loginUser = async (formData: FormData) =>{
     try{
        await signIn('credentials',{
         redirect: false,
+        redirectTo: '/',
         callbackUrl: '/',
         email: email,
         password: password,
-       })
+       });
+       console.log("User Logged In Successfully")
     }catch(error){
         const someError =error as CredentialsSignin
         throw someError
     }
-    redirect('/')
-
+    redirect("/");
 }
 
 
@@ -37,7 +38,7 @@ const registerUser = async (formData: FormData)=>{
     
     const id = Math.floor(Math.random() * 100000);
 
-    const realId = `${teamName.slice(0,4).toLowerCase()}-${5}${id}`;
+    const realId = `${teamName.slice(0,6).toLowerCase()}-${5}${id}`;
 
     const hashedPassword = await saltAndHashPassword(password)
     
@@ -55,7 +56,9 @@ const registerUser = async (formData: FormData)=>{
             await setDoc(doc(db, `Organizations/`, realId),{
                 name: name,
                 email: email,
+                organization: teamName,
                 password: hashedPassword,
+                role: "manager",
                 id: realId
             })
             console.log("User Registered Successfully")
@@ -67,12 +70,13 @@ const registerUser = async (formData: FormData)=>{
     } catch (error) {   
         throw new Error(error)
     }
-    redirect('/login');
+
+    redirect('/auth/login');
 
 }
 
 const logOutUser = async() => {
-    await signOut()
+    await signOut({redirectTo: '/auth/login'})
 }
 
 const getUser = async()=>{

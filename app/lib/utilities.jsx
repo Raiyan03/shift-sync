@@ -264,32 +264,35 @@ export async function addingLeaderAndTeam(teamName, data) {
   }
 }
 
-export async function getUserFromDB(email, password) {
-  let user = [];
-  const userReference = collection(db, "Organizations");
-  const q = query(userReference, where("email", "==", email));
-  let userSnapshots;
-  try {
-    userSnapshots = await getDocs(q);
-  } catch (error) {
-    throw new Error(error);
-  }
-  if (!userSnapshots.empty) {
-    userSnapshots.forEach((doc) => {
-      const match = comparePass(password, doc.data().password);
-      if (match) {
-        user.push({
-          name: doc.data().name,
-          email: doc.data().email,
-          id: doc.data().id,
-          role: doc.data().role,
-        });
-      }
-    });
-  }
-  console.log(user[0]);
-  return user[0];
-}
+
+// Legacy Code
+
+// export async function getUserFromDB(email, password) {
+//   let user = [];
+//   const userReference = collection(db, "Organizations");
+//   const q = query(userReference, where("email", "==", email));
+//   let userSnapshots;
+//   try {
+//     userSnapshots = await getDocs(q);
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+//   if (!userSnapshots.empty) {
+//     userSnapshots.forEach((doc) => {
+//       const match = comparePass(password, doc.data().password);
+//       if (match) {
+//         user.push({
+//           name: doc.data().name,
+//           email: doc.data().email,
+//           id: doc.data().id,
+//           role: doc.data().role,
+//         });
+//       }
+//     });
+//   }
+//   console.log(user[0]);
+//   return user[0];
+// }
 
 export const saltAndHashPassword = async (rawPass) => {
   const salt = 10;

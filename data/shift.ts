@@ -13,6 +13,23 @@ import {
   query,
 } from "firebase/firestore";
 
+export async function getShiftData(userId:string){
+    const docQuery = doc(db, `Organizations`, userId)
+    
+    try {
+        const docSnap = await getDoc(docQuery)
+        if(docSnap.exists()){
+            return{
+                shifts: docSnap.data().shifts,
+                hour_bank: docSnap.data().hour_bank
+            }
+            return docSnap.data()
+        }
+    } catch (error) {
+        console.log("Shift Data Not Found", error)
+    }
+}
+
 export async function getUserData(userId:string) {
     const collQuery = query(collection(db, `Organizations`))
 
@@ -29,6 +46,8 @@ export async function getUserData(userId:string) {
                     }
                 }
             }
+        }else{
+            return null
         }
 
     }catch(err){

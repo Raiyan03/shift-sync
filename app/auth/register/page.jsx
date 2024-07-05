@@ -15,12 +15,14 @@ export default function RegisterPage() {
             name="fname"
             className="p-2 border-2 border-primary rounded-lg bg-inherit text-black"
             placeholder="First Name"
+            required
           />
           <input
             type="text"
             name="lname"
             className="p-2 border-2 border-primary rounded-lg bg-inherit text-black"
             placeholder="Last Name"
+            required
           />
         </div>
         <input
@@ -28,18 +30,21 @@ export default function RegisterPage() {
           name="team"
           className="p-2 border-2 border-primary rounded-lg bg-inherit text-black"
           placeholder="Organization Name"
+          required
         />
         <input
           type="text"
           name="email"
           className="p-2 border-2 border-primary rounded-lg bg-inherit text-black"
           placeholder="Email"
+          required
         />
         <input
           type="password"
           name="password"
           className="p-2 border-2 border-primary rounded-lg bg-inherit text-black"
           placeholder="Password"
+          required
         />
         <button type="submit" className="bg-primary p-3 text-white rounded-lg">
           Register

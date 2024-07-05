@@ -32,9 +32,9 @@ export default function UserBatch (){
         active:shadow-md active:bg-gray-200">
             <Image src={"/user.png"} width={50} height={80} alt={"user icon"} />
             <div>
-                <h1 className="text-xl font-semibold"> {name? `${name}`: ""} </h1>
+                <h1 className="text-xl font-semibold"> {name? `${name.charAt(0).toUpperCase() + name.slice(1)}`: ""} </h1>
                 <p className="text-accent1">
-                    Position : {position? `${position}`: ""}
+                    Position : {position? `${position.charAt(0).toUpperCase() + position.slice(1)}`: ""}
                 </p>
             </div>
         </div>

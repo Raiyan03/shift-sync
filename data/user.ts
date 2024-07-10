@@ -14,7 +14,7 @@ import {
   query,
 } from "firebase/firestore";
 
-export async function getEmployeeScheduleData(organization) {
+export async function getEmployeeScheduleData(organization: string) {
   let employees = [];
   const colRef = query(
     collection(db, `Organizations/${organization}/employees`)
@@ -28,14 +28,15 @@ export async function getEmployeeScheduleData(organization) {
   try {
     var docSnap = await getDocs(colRef);
     var docSnapShifts = await getDoc(docRef);
-    if (!docSnapShifts.empty && !docSnap.empty) {
+    if (docSnapShifts.exists() && !docSnap.empty) {
       const shiftsData = docSnapShifts
         .data()
-        .shifts.map((value, index) => convert(value));
+        .shifts.map((value: any, index: any) => convert(value));
 
       docSnap.forEach((doc) => {
         employees.push({
           name: doc.data().name,
+          id: doc.data().Id,
           shiftPref: {
             Mon: doc.data().mon,
             Tue: doc.data().tue,

@@ -64,6 +64,7 @@ export async function getScheduleData(organization) {
       docSnap.forEach((doc) => {
         employees.push({
           name: doc.data().name,
+          id: doc.data().Id,
           shiftPref: {
             Mon: doc.data().mon,
             Tue: doc.data().tue,
@@ -74,13 +75,15 @@ export async function getScheduleData(organization) {
             Sun: doc.data().sun,
           },
           status: doc.data().status ? "fulltime" : "parttime",
+          role: 'employee',
         });
       });
 
       const data = {
         employees,
         shifts: shiftsData,
-        hour_bank: docSnapShifts.data().hour_bank,
+        hour_bank: parseInt(docSnapShifts.data().hour_bank),
+        flex_hours: parseInt(docSnapShifts.data().flex_hours),
       };
 
       return data;
@@ -176,7 +179,7 @@ export async function getEmployeeData(organization) {
       name: doc.data().name,
       email: doc.data().email,
       status: doc.data().status,
-      Id: doc.data().Id,
+      id: doc.data().Id,
     });
   });
 

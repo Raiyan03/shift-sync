@@ -23,24 +23,24 @@ export default function QrGenerate() {
 
     if (isValidEmployee) {
       setSelectedEmployee(selectedEmployeeName);
-      setEmployeeName(selectedEmployeeName); // Set employee name
-      setQrValue(''); // Clear QR value when the selected employee changes
-      setTimer(10); // Reset timer when the selected employee changes
-      setIsLoading(true); // Start loading
-      setEmployeeNotFound(false); // Reset employee not found state
+      setEmployeeName(selectedEmployeeName);
+      setQrValue('');
+      setTimer(60); 
+      setIsLoading(true);
+      setEmployeeNotFound(false);
 
       setTimeout(() => {
-        setIsLoading(false); // End loading after verification
-      }, 1000); // Simulate a delay for verification
+        setIsLoading(false);
+      }, 1000);
+      // if not valid, set selectedEmployee
     } else {
-      // Handle case where selected employee is not valid
       console.log(`Employee '${selectedEmployeeName}' is not in scheduleData.`);
       setSelectedEmployee('');
-      setEmployeeName(''); // Clear employee name
+      setEmployeeName(''); 
       setQrValue('');
       setTimer(10);
       setIsLoading(false);
-      setEmployeeNotFound(true); // Set employee not found state to true
+      setEmployeeNotFound(true);
     }
   };
 
@@ -58,7 +58,7 @@ export default function QrGenerate() {
     if (selectedEmployee) {
       const newQrValue = generateQrValue(selectedEmployee);
       setQrValue(newQrValue);
-      setTimer(10); // Reset timer
+      setTimer(10);
     }
   };
 
@@ -71,11 +71,11 @@ export default function QrGenerate() {
           if (prevTimer === 1) {
             const newQrValue = generateQrValue(selectedEmployee);
             setQrValue(newQrValue);
-            return 10; // Reset timer
+            return 10; 
           }
           return prevTimer - 1;
         });
-      }, 1000); // Decrease timer every second
+      }, 1000);
     }
 
     return () => clearInterval(intervalId); // Cleanup on unmount or when selectedEmployee changes
@@ -105,7 +105,7 @@ export default function QrGenerate() {
           <option key={index} value={name}>{name}</option>
         ))}
       </select>
-      {employeeNotFound && ( // Display message if employee not found
+      {employeeNotFound && ( // Not found messages
         <p className="text-red-500 mb-2">Employee not found</p>
       )}
       {isLoading ? (

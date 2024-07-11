@@ -75,7 +75,7 @@ export async function getScheduleData(organization) {
             Sun: doc.data().sun,
           },
           status: doc.data().status ? "fulltime" : "parttime",
-          role: 'employee',
+          role: doc.data().role,
         });
       });
 
@@ -83,8 +83,8 @@ export async function getScheduleData(organization) {
         employees,
         shifts: shiftsData,
         hour_bank: parseInt(docSnapShifts.data().hour_bank),
-        // flex_hours: parseInt(docSnapShifts.data().flex_hours),
-        flex_hours: 20,
+        flex_hours: parseInt(docSnapShifts.data().flex_hours),
+        // flex_hours: 20,
       };
 
       return data;

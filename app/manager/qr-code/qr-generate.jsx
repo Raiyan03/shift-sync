@@ -1,5 +1,5 @@
 "use client";
-//GPT 4.0 via POE
+
 import React, { useState, useEffect } from 'react';
 import QrCodeComponent from './qr-code';
 import scheduleData from '../../../components/manager/evaluation/scheduleData.json';
@@ -11,6 +11,7 @@ export default function QrGenerate() {
   const [timer, setTimer] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [employeeNotFound, setEmployeeNotFound] = useState(false); // State to track employee not found
+  const [employeeName, setEmployeeName] = useState(''); // State to store employee name
 
   const handleEmployeeChange = (event) => {
     const selectedEmployeeName = event.target.value;
@@ -20,6 +21,7 @@ export default function QrGenerate() {
 
     if (isValidEmployee) {
       setSelectedEmployee(selectedEmployeeName);
+      setEmployeeName(selectedEmployeeName); // Set employee name
       setQrValue(''); // Clear QR value when the selected employee changes
       setTimer(10); // Reset timer when the selected employee changes
       setIsLoading(true); // Start loading
@@ -32,6 +34,7 @@ export default function QrGenerate() {
       // Handle case where selected employee is not valid
       console.log(`Employee '${selectedEmployeeName}' is not in scheduleData.`);
       setSelectedEmployee('');
+      setEmployeeName(''); // Clear employee name
       setQrValue('');
       setTimer(10);
       setIsLoading(false);
@@ -39,8 +42,14 @@ export default function QrGenerate() {
     }
   };
 
+  const generateRandomString = () => {
+    return Math.random().toString(36).substring(7);
+  };
+
   const generateQrValue = (employee) => {
-    return `Welcome ${employee}`;
+    const randomString = generateRandomString();
+    const url = `https://www.example.com/${randomString}`;
+    return `${url}?message=Welcome%20${encodeURIComponent(employee)}`;
   };
 
   const handleGenerateClick = () => {
@@ -71,7 +80,7 @@ export default function QrGenerate() {
   }, [selectedEmployee]);
 
   const isEmployeeValid = (employeeName) => {
-    const employeeNames = Array.from(new Set( // Use Set to ensure uniqueness
+    const employeeNames = Array.from(new Set(
       scheduleData.schedule.flatMap(day => day.shifts.map(shift => shift.employee))
     ));
     return employeeNames.includes(employeeName);
@@ -110,8 +119,11 @@ export default function QrGenerate() {
       )}
       {qrValue && (
         <div className="flex flex-col items-center">
-          <QrCodeComponent value={qrValue} />
-          <p className="text-gray-700 mt-4">{qrValue}</p>
+          <div className="border-2 border-black p-2 rounded"> {/* Tailwind classes for border styling */}
+            <QrCodeComponent value={qrValue} />
+          </div>
+          <p className="text-gray-500 mt-2">Welcome {employeeName}</p>
+          <p className="text-gray-500 mt-2">Scan the QR Code to get Started!</p>
           <p className="text-gray-500 mt-2">Next refresh in: {timer} seconds</p>
         </div>
       )}

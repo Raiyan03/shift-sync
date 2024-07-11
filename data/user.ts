@@ -47,6 +47,7 @@ export async function getEmployeeScheduleData(organization: string) {
             Sun: doc.data().sun,
           },
           status: doc.data().status ? "fulltime" : "parttime",
+          role: "employee",
         });
       });
 

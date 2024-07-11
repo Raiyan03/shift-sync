@@ -83,7 +83,8 @@ export async function getScheduleData(organization) {
         employees,
         shifts: shiftsData,
         hour_bank: parseInt(docSnapShifts.data().hour_bank),
-        flex_hours: parseInt(docSnapShifts.data().flex_hours),
+        // flex_hours: parseInt(docSnapShifts.data().flex_hours),
+        flex_hours: 20,
       };
 
       return data;
@@ -232,9 +233,10 @@ export async function deleteEmployee(organization, employeeId) {
   } catch (err) {
     console.error("Error deleting document by id:", err);
   }
+
 }
 
-export async function updateShifts(organization, data, hours) {
+export async function updateShifts(organization, data, hours, flex) {
   const itemsRef = doc(db, `Organizations/${organization}`);
   const q = query(itemsRef);
 
@@ -244,10 +246,10 @@ export async function updateShifts(organization, data, hours) {
       // await setDoc(itemsRef, {shifts: []}, {merge: true})
       await setDoc(
         itemsRef,
-        { shifts: data, hour_bank: hours },
+        { shifts: data, hour_bank: hours, flex_hours: flex },
         { merge: true }
       );
-      return "Shifts Updated Successfully";
+      return true;
     }
   } catch (error) {
     console.log("User Not Found:", error);

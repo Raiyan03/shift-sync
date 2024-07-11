@@ -1,5 +1,7 @@
 "use client";
 
+//GPT 4.0 via Poe
+
 import React, { useState, useEffect } from 'react';
 import QrCodeComponent from './qr-code';
 import scheduleData from '../../../components/manager/evaluation/scheduleData.json';
@@ -10,13 +12,13 @@ export default function QrGenerate() {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [timer, setTimer] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
-  const [employeeNotFound, setEmployeeNotFound] = useState(false); // State to track employee not found
-  const [employeeName, setEmployeeName] = useState(''); // State to store employee name
-
+  const [employeeNotFound, setEmployeeNotFound] = useState(false);
+  const [employeeName, setEmployeeName] = useState('');
   const handleEmployeeChange = (event) => {
     const selectedEmployeeName = event.target.value;
 
-    // Check if selectedEmployeeName exists in scheduleData
+    // Validate electedEmployeeName in scheduleData
+    // 
     const isValidEmployee = isEmployeeValid(selectedEmployeeName);
 
     if (isValidEmployee) {
@@ -119,7 +121,7 @@ export default function QrGenerate() {
       )}
       {qrValue && (
         <div className="flex flex-col items-center">
-          <div className="border-2 border-black p-2 rounded"> {/* Tailwind classes for border styling */}
+          <div className="border-2 border-black p-2 rounded">
             <QrCodeComponent value={qrValue} />
           </div>
           <p className="text-gray-500 mt-2">Welcome {employeeName}</p>

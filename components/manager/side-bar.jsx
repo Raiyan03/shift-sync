@@ -25,6 +25,16 @@ const navbarItems = {
       path: "/manager/availability",
       icon: <MdSchedule />,
     },
+    {
+      title: "QR Code",
+      path: "/manager/qr-code",
+      icon: <MdQrCodeScanner />,
+    },
+    {
+      title: "Shift Swap",
+      path: "/manager/shift-swap",
+      icon: <MdSwapCalls />,
+    },
     // {
     //   title: "Generate Schedule",
     //   path: "/dashboard/getSchedule",

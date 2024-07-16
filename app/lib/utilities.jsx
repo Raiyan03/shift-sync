@@ -42,6 +42,9 @@ export async function getOrganization() {
   return orgs;
 }
 
+//Request exporter WIP
+
+
 export async function getScheduleData(organization) {
   let employees = [];
   const colRef = query(
@@ -187,6 +190,27 @@ export async function getEmployeeData(organization) {
   return employees;
 }
 
+//Request retrieval
+export async function RequestData(organization) {
+  let requests = [];
+  const colRef = query(
+    collection(db, `Organizations/${organization}/requests`)
+  );
+  const docSnap = await getDocs(colRef);
+
+  docSnap.forEach((doc) => {
+    requests.push({
+      reqID: doc.data().reqID,
+      reqSource: doc.data().reqSource,
+      reqType: doc.data().reqType,
+      reqStatus: doc.data().reqStatus,
+    });
+  });
+
+
+  return requests;
+}
+
 export async function setEmployeeData(organization, employeeData, id) {
   const ItemRef = collection(db, `Organizations/${organization}/employees`);
   const q = query(ItemRef, where("email", "==", employeeData.email));
@@ -210,6 +234,27 @@ export async function setEmployeeData(organization, employeeData, id) {
   // const docRef = await addDoc(collection(db, `Organizations/${organization}/employees`), employeeData);
 
   // console.log(docRef.id)
+}
+
+//Request modifier
+export async function modifyRequest(organization, reqData, reqID) {
+  const ItemRef = collection(db, `Organizations/${organization}/requests`);
+  const q = query(ItemRef, where("reqID", "==", reqData.reqID));
+
+  try {
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      await setDoc(
+        doc(db, `Organizations/${organization}/requests`, reqID),
+        reqData
+      );
+      return true;
+    } else {
+      return "Request error";
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export async function deleteEmployee(organization, employeeId) {

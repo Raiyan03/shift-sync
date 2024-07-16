@@ -1,54 +1,34 @@
 import { logOutUser } from "@/action/actions"
-import EmpSession from "../../components/employee/emp-session/emp-session-monitor";
-import EmployeeUpdateForm from "./update/update-employee";
+"use client"
+import { getUser, logOutUser } from "@/action/actions"
+import { getShiftDataForTheUser } from "@/data/shift"
+import { useEffect, useState } from "react"
+import MultiChoiceDrop from "../../components/employee/update-prefs/multichoice"
 
 const page = () => {
+  const [userData, setUserData] = useState()
+
+  const fetch = async ()=>{
+    const token = await getUser()
+    if(token){
+      setUserData(token)
+    }
+  }
+
+  useEffect(()=>{fetch()},[])
+
   return (
     <div>
         <div>
-            <EmpSession />
-        </div>
-        <div>
-          <EmployeeUpdateForm />
+          Employee
+          <MultiChoiceDrop />
         </div>
         <form action={logOutUser}>
-            <button type="submit">
-                Logout
-            </button>
+            <button type="submit">Logout</button>
         </form>
+        <div>{}</div>
         {/* <button onClick={logOutUser}>Logout</button> */}
     </div>
   )
 }
-
-export default page;
-
-/*
-//Alternative code for displaying logged in user information
-// Uses 'currentUser' state or react Context
-// TODO: Clean this up
-
-import React, { useContext } from 'react';
-import { AuthContext } from './AuthContext'; // Assume you have an AuthContext for managing authentication state
-
-const EmployeeProfile = () => {
-  const { currentUser } = useContext(AuthContext);
-
-  return (
-    <div>
-      <h2>Employee Profile</h2>
-      {currentUser ? (
-        <div>
-          <p>Name: {currentUser.displayName}</p>
-          <p>Email: {currentUser.email}</p>
-          // { Display more employee details as needed }
-        </div>
-      ) : (
-        <p>No employee logged in</p>
-      )}
-    </div>
-  );
-};
-
-export default EmployeeProfile;
-*/ 
+export default page

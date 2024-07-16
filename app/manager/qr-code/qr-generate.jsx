@@ -38,7 +38,7 @@ export default function QrGenerate() {
       setSelectedEmployee('');
       setEmployeeName(''); 
       setQrValue('');
-      setTimer(10);
+      setTimer(60);
       setIsLoading(false);
       setEmployeeNotFound(true);
     }
@@ -50,7 +50,7 @@ export default function QrGenerate() {
 
   const generateQrValue = (employee) => {
     const randomString = generateRandomString();
-    const url = `https://www.example.com/${randomString}`;
+    const url = `https://www.example.com/}`;
     return `${url}?message=Welcome%20${encodeURIComponent(employee)}`;
   };
 
@@ -58,7 +58,7 @@ export default function QrGenerate() {
     if (selectedEmployee) {
       const newQrValue = generateQrValue(selectedEmployee);
       setQrValue(newQrValue);
-      setTimer(10);
+      setTimer(60);
     }
   };
 
@@ -71,7 +71,7 @@ export default function QrGenerate() {
           if (prevTimer === 1) {
             const newQrValue = generateQrValue(selectedEmployee);
             setQrValue(newQrValue);
-            return 10; 
+            return 60; 
           }
           return prevTimer - 1;
         });
@@ -94,11 +94,11 @@ export default function QrGenerate() {
   ));
 
   return (
-    <div className="flex flex-col items-center mt-8">
+    <div className="flex flex-col items-center mt-2">
       <select
         value={selectedEmployee}
         onChange={handleEmployeeChange}
-        className="bg-white border border-gray-300 p-2 rounded mb-4"
+        className="bg-white border border-gray-300 p-2 rounded mb-2"
       >
         <option value="" disabled>Select an employee</option>
         {employeeNames.map((name, index) => (

@@ -13,7 +13,7 @@ export default function qrPage() {
         {/* Used example.com for placeholder */}
         {/* <QrCodeComponent value="https://www.example.com/" /> */}
       {/* </div> */}
-      <div className="mt-24 p-7 rounded-lg shadow-lg flex flex-col items-center border-4 border-black">
+      <div className="p-7 rounded-lg shadow-lg flex flex-col items-center border-4 border-black">
         <h1>Employee QR Validation</h1>
         <QrGenerate />
       </div>

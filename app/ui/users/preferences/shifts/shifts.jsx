@@ -1,6 +1,8 @@
 "use client";
 import { getScheduleData } from "@/app/lib/utilities";
 import React, { useEffect, useState } from "react";
+import { getUser } from "@/action/actions";
+
 
 export default function Shifts({ day, setPreference }) {
   const [schedule, setSchedule] = useState();
@@ -55,12 +57,15 @@ export default function Shifts({ day, setPreference }) {
     // }
 
     // const scheduleData = await res.json();
+    const user = await getUser();
 
-    const scheduleData = await getScheduleData("Ace Liquor");
+    if(user){
 
-    console.log(scheduleData)
+      const scheduleData = await getScheduleData(user.id);
+      setSchedule(scheduleData);
+    }
 
-    setSchedule(scheduleData);
+
   };
 
   useEffect(() => {
@@ -72,18 +77,19 @@ export default function Shifts({ day, setPreference }) {
       name={day}
       value={pref}
       className="bg-transparent border-2 border-primary rounded-xl p-3 text-black mt-3"
-      onChange={(e) => {setPreference(e.target.value); console.log(e.target.value)}}
+      onChange={(e) => {setPreference(e.target.value)}}
       required
     >
       <option value="any" className="" disabled selected>
         Select your shift preference
       </option>
+      <option value="any">Any Shift</option>
 
       {schedule &&
         schedule.shifts.map((value, index) => {
           return <option value={`${day}-${index}`}>{timeStampConversion(value)}</option>;
         })}
-      <option value="any">Any Shift</option>
+        <option value="NA">Not Available</option>
     </select>
   );
 }

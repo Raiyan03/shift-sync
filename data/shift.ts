@@ -29,8 +29,8 @@ export async function getShiftData(userId: string) {
           flex_hours: docSnap.data()?.flex_hours,
         };
         return docSnap.data();
-      }else{
-        return null
+      } else {
+        return null;
       }
     } else {
       return null;
@@ -171,4 +171,36 @@ export async function getShiftDataFromDB(collectionId: string) {
   return data;
 }
 
-export async function getShiftDataForTheUser(userId: string) {}
+export async function getShiftDataForTheUser(userId: string) {
+  const data = [];
+  const userReference = collection(db, "Organizations");
+  const totalDataSnap = await getDocs(query(userReference));
+  if (!totalDataSnap.empty) {
+    for (const docData of totalDataSnap.docs) {
+      if (docData.data().id.includes(userId.slice(0, 4))) {
+        const scheduleQuery = collection(
+          db,
+          `Organizations/${docData.data().id}/schedule`
+        );
+        const scheduleDocs = await getDocs(query(scheduleQuery));
+
+        if (!scheduleDocs.empty) {
+          for (const schedule of scheduleDocs.docs) {
+            if (schedule.id != "data") {
+              schedule.data().shifts.map((val, index) => {
+                if (val.id === userId) {
+                  data.push({
+                    day: schedule.data().day,
+                    shift: val,
+                  });
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+
+  console.log(data);
+}

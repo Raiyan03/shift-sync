@@ -6,6 +6,10 @@ import { useEffect, useState } from "react"
 const page = () => {
   const [userData, setUserData] = useState()
 
+  const fetchScheduleData = async()=>{
+    await getShiftDataForTheUser(userData.id)
+  }
+
   const fetch = async ()=>{
     const token = await getUser()
     if(token){
@@ -25,7 +29,14 @@ const page = () => {
                 Logout
             </button>
         </form>
-        <div>{}</div>
+        <div>
+          {userData && (
+            <button onClick={fetchScheduleData}> 
+              GetScheduleData
+            </button>
+          )}
+
+        </div>
         {/* <button onClick={logOutUser}>Logout</button> */}
     </div>
   )

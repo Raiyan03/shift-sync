@@ -15,12 +15,12 @@ import { storeShiftToDB } from "@/data/shift";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
   const [rawData, setRawData] = useState();
+  const [shiftsData, setShiftsData] = useState();
 
   const publishSchedule = async () => {
     const user = await getUser();
     if (user) {
-        console.log(rawData)
-      await storeShiftToDB(user.id, rawData);
+      await storeShiftToDB(user.id, shiftsData);
     }
   };
 
@@ -29,7 +29,6 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     const currentUser = await getUser();
 
     const data = await getScheduleData(currentUser.id);
-    console.log(data);
     const res = await fetch("/api/schedule", {
       method: "POST",
       body: JSON.stringify(data),
@@ -38,9 +37,10 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       },
     });
     const scheduleData = await res.json();
-    setRawData(scheduleData);
+    setRawData(data);
     const shifts = filterShifts(scheduleData);
     setSchedule(shifts);
+    setShiftsData(scheduleData)
     setHoursRemaining(shifts.remaining_hours);
     setLoading(false);
   };
@@ -62,55 +62,26 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
             <td className="p-2">Total hours</td>
           </tr>
         </thead>
-        {/* <tbody>
-                    {users.map((user) => (
-                        <tr className="bg-white border-b" key={user.id}>
-                            <td className="p-2">
-                                <div className="flex items-center gap-2">
-                                    <Image 
-                                        className="w-12 h-12 rounded-full" 
-                                        src={user.img || "/noavatar.png"} 
-                                        width={50}
-                                        height={50} 
-                                        alt='User' 
-                                    />
-                                    <span>{user.username}</span>
-                                </div>
-                            </td>
-                            <td className="p-2">{user.email}</td>
-                            <td className="p-2">{ user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown"}</td>
-                            <td className="p-2">{user.isAdmin ? "Admin" : "Client"}</td>
-                            <td className="p-2">{user.isActive ? "Active" : "Passive"}</td>
-                            <td className="p-2">
-                                <div className="flex gap-2">
-                                    <Link href={`/dashboard/users/${user.id}`}>
-                                        <button className="bg-teal-500 text-white py-1 px-2 rounded-md">
-                                            View
-                                        </button>
-                                    </Link>
-                                    <button className="bg-red-500 text-white py-1 px-2 rounded-md">
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody> */}
         <tbody>
-          <Table scheduleData={Schedule} />
+          <Table scheduleData={Schedule} options={rawData} shiftData={shiftsData} />
         </tbody>
       </table>
-      <div className="text-lg">
-        Remaining Hours:{" "}
-        <span className="text-red-500 font-bold"> {hoursRemaining}</span>
-        <span className="absolute right-10">
+      <div className="ml-3 mt-2">
+        *<span className="text-green-800 font-bold">Green</span>: Shift was requested and is fulfilled
+      </div>
+      <div className="flex flex-row justify-between mt-2">
+        <div className="flex text-lg justify-center align-middle items-center">
+          Remaining Hours:
+          <span className="text-red-500 font-bold"> {hoursRemaining}</span>
+        </div>
+        <div className="flex">
           <button
             onClick={publishSchedule}
-            className="bg-primary text-white rounded-md p-2 w-30"
+            className="bg-primary text-white rounded-md p-2 w-30 mr-10"
           >
             Publish
           </button>
-        </span>
+        </div>
       </div>
     </div>
   ) : (

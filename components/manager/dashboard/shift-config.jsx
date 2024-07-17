@@ -21,7 +21,6 @@ function ShiftConfig({ id }) {
     const user = await getUser();
     if (user !== undefined) {
       const shiftData = await getShiftData(user.id);
-      console.log(shiftData);
       let newShift = [...shifts];
       if (shiftData != null || shiftData != undefined) {
         setHoursOfOperation(shiftData.hour_bank);

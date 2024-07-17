@@ -88,11 +88,11 @@ export async function getScheduleData(organization) {
       };
 
       return data;
-    }else{
-      return {employees: []}
+    } else {
+      return { employees: [] };
     }
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 }
 
@@ -102,17 +102,25 @@ export function filterShifts(scheduleData) {
   const total_hours = [];
 
   scheduleData.schedule.forEach((day) => {
-    day.shifts.forEach((shift) => {
+    day.shifts.map((shift, index) => {
       if (!employees[shift.employee]) {
-        employees[shift.employee] = new Array(daysOfWeek).fill("Not Working");
+        employees[shift.employee] = new Array(daysOfWeek).fill({
+          ["id"]: shift.id,
+          ["shift"]: "Not Working",
+          ["requested"]: false,
+          ["hours"]: 0,
+        });
+        // employees[shift.employee][day.day] = {["id"]: shift.id,};
+      } else {
+        employees[shift.employee][day.day] = {
+          day: day.day,
+          id: shift.id,
+          shift: convertTimeStamp(shift.shift),
+          requested: shift.requested,
+          hours: shift.hours,
+        };
       }
-      employees[shift.employee][day.day] = {
-        shift: convertTimeStamp(shift.shift),
-        requested: shift.requested,
-      };
-
     });
-
   });
 
   const result = Object.keys(employees).map((employeeName) => {
@@ -123,10 +131,7 @@ export function filterShifts(scheduleData) {
     };
   });
 
-  return {result,
-    remaining_hours: scheduleData.remaining_hour_bank
-    
-  };
+  return { result, remaining_hours: scheduleData.remaining_hour_bank };
 }
 
 export function convertTimeStamp(data) {
@@ -233,7 +238,6 @@ export async function deleteEmployee(organization, employeeId) {
   } catch (err) {
     console.error("Error deleting document by id:", err);
   }
-
 }
 
 export async function updateShifts(organization, data, hours, flex) {
@@ -309,4 +313,71 @@ export const comparePass = async (rawPass, hashedPassword) => {
     return true;
   }
   return false;
+};
+
+export const timeStampConversion = (data) => {
+  if (!data) {
+    return;
+  }
+  let [start, end] = [data[0], data[1]];
+
+  const startDate = new Date(parseInt(start, 10));
+
+  let startHours = startDate.getHours();
+  let startMin = parseInt("0" + startDate.getMinutes(), 10);
+
+  const period = startHours <= 12 ? "AM" : "PM";
+
+  // Adjust the hours for 12-hour format
+  startHours = startHours % 12;
+  startHours = startHours ? startHours : 12; // If hours is 0, set it to 12
+
+  // Format the hours and minutes to be always two digits
+  const startformattedHours = startHours < 10 ? "0" + startHours : startHours;
+  const startformattedMinutes = startMin < 10 ? "0" + startMin : startMin;
+
+  const endDate = new Date(parseInt(end, 10));
+
+  let endHours = endDate.getHours();
+  let endMins = parseInt("0" + endDate.getMinutes(), 10);
+
+  const period2 = endHours <= 12 ? "AM" : "PM";
+
+  // Adjust the hours for 12-hour format
+  endHours = endHours % 12;
+  endHours = endHours ? endHours : 12; // If hours is 0, set it to 12
+
+  // Format the hours and minutes to be always two digits
+  const endformattedHours = endHours < 10 ? "0" + endHours : endHours;
+  const endformattedMinutes = endMins < 10 ? "0" + endMins : endMins;
+
+  // Return the formatted time
+  return `${startformattedHours}:${startformattedMinutes} ${period} - ${endformattedHours}:${endformattedMinutes} ${period2}`;
+};
+
+export const stringToTime = (shift) => {
+  let [start, end] = shift.split(",");
+
+  const startDate = new Date(parseInt(start, 10));
+
+  let startHours = startDate.getHours();
+  let startMin = parseInt("0" + startDate.getMinutes(), 10);
+
+  const startformattedHours = startHours < 10 ? "0" + startHours : startHours;
+  const startformattedMinutes = startMin < 10 ? "0" + startMin : startMin;
+
+  let startTime = startformattedHours + ":" + startformattedMinutes;
+
+  const endDate = new Date(parseInt(end, 10));
+
+  let endHours = endDate.getHours();
+  let endMin = parseInt("0" + endDate.getMinutes(), 10);
+
+  const endformattedHours = endHours < 10 ? "0" + endHours : endHours;
+  const endformattedMinutes = endMin < 10 ? "0" + endMin : endMin;
+
+  let endTime = endformattedHours + ":" + endformattedMinutes;
+
+  return [startTime, endTime]
+
 };

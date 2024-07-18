@@ -12,7 +12,7 @@ const loginUser = async (formData: FormData) =>{
     const password = formData.get('password');
     try{
        await signIn('credentials',{
-        redirect: false,
+        redirect: true,
         redirectTo: '/',
         callbackUrl: '/',
         email: email,
@@ -21,9 +21,10 @@ const loginUser = async (formData: FormData) =>{
        console.log("User Logged In Successfully")
     }catch(error){
         const someError =error as CredentialsSignin
-        throw someError
+        // throw someError
+        console.log(someError)
     }
-    redirect("/");
+    redirect("/");   
 }
 
 

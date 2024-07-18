@@ -96,8 +96,6 @@ export async function getUserFromDB(email: string, password: string) {
           id: docData.data().id,
           role: docData.data().role,
         });
-        }else{
-          return "Wrong Password"
         }
       }
     } else {
@@ -123,8 +121,6 @@ export async function getUserFromDB(email: string, password: string) {
                   id: employeeSnapshot.data().Id,
                   role: "employee",
                 });
-              }else{
-                return "Wrong Password"
               }
             }
           }

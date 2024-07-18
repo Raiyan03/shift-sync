@@ -6,7 +6,7 @@ import React from 'react'
 const Page = () => {
 
     const onClickTest = async ()=>{
-      console.log(await getUserFromDB("Ace -946100", "123456"))
+      console.log(await getUserFromDB("admin@insinc.com", "123456"))
     }
   return (
     <div>

@@ -26,10 +26,7 @@ export default function Page() {
       console.log(userData)
       setShift(scheduleData);
       setUserId(userData.id);
-    }
-
-    
-    
+    }    
   };
 
   useEffect(() => {

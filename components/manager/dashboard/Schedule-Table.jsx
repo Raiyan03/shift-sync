@@ -10,10 +10,11 @@ import {
 } from "@/lib/utilities";
 import Table from "@/components/manager/dashboard/table";
 import { ClipLoader, MoonLoader } from "react-spinners";
-import { useState } from "react";
-import { storeShiftToDB } from "@/data/shift";
+import { useEffect, useState } from "react";
+import { deleteScheduleData, getShiftDataFromDB, storeShiftToDB } from "@/data/shift";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
+  const [userId, setUserId] = useState()
   const [rawData, setRawData] = useState();
   const [shiftsData, setShiftsData] = useState();
 
@@ -21,6 +22,19 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     const user = await getUser();
     if (user) {
       await storeShiftToDB(user.id, shiftsData);
+    }
+  };
+
+  const onLoadDataRender = async () => {
+    const currentUser = await getUser();
+    setUserId(currentUser?.id)
+    const alreadyExistingData = await getShiftDataFromDB(currentUser?.id);
+    if (alreadyExistingData !== null) {
+      const shifts = filterShifts(alreadyExistingData);
+      setSchedule(shifts);
+      setHoursRemaining(shifts.remaining_hours);
+      setLoading(false);
+    } else {
     }
   };
 
@@ -36,18 +50,32 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         "Content-Type": "application/json",
       },
     });
+
     const scheduleData = await res.json();
     setRawData(data);
     const shifts = filterShifts(scheduleData);
     setSchedule(shifts);
-    setShiftsData(scheduleData)
+    setShiftsData(scheduleData);
     setHoursRemaining(shifts.remaining_hours);
     setLoading(false);
   };
+
+  const deleteSchedule = async()=>{
+    setSchedule(null)
+    await deleteScheduleData(userId)
+  }
+
+  useEffect(() => {
+    onLoadDataRender();
+  }, []);
   // fetchAndLogData();
   return Schedule ? (
     <div className=" flex flex-col bg-secondary border shadow-md rounded-lg p-4">
-      <h1 className="text-xl text-accent1 py-3">Schedule for this week</h1>
+      <div className="flex flex-row justify-between mt-2">
+        <h1 className="text-xl text-accent1 py-3">Schedule for this week</h1>
+        <button className="bg-primary text-white rounded-md p-2 w-30 flex h-10 items-center justify-center mr-10" onClick={deleteSchedule}>Delete Schedule</button>
+      </div>
+
       <table className="w-full">
         <thead>
           <tr className=" ">
@@ -63,11 +91,16 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
           </tr>
         </thead>
         <tbody>
-          <Table scheduleData={Schedule} options={rawData} shiftData={shiftsData} />
+          <Table
+            scheduleData={Schedule}
+            options={rawData}
+            shiftData={shiftsData}
+          />
         </tbody>
       </table>
       <div className="ml-3 mt-2">
-        *<span className="text-green-800 font-bold">Green</span>: Shift was requested and is fulfilled
+        *<span className="text-green-800 font-bold">Green</span>: Shift was
+        requested and is fulfilled
       </div>
       <div className="flex flex-row justify-between mt-2">
         <div className="flex text-lg justify-center align-middle items-center">

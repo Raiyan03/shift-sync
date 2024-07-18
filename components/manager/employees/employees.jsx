@@ -19,6 +19,7 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                         <td className="p-2 font-bold">Id</td>
                         <td className="p-2 font-bold">Name</td>
                         <td className="p-2 font-bold">Email</td>
+                        <td className="p-2 font-bold">Role</td>
                         {/* <td className="p-2 font-bold">Joined on</td> */}
                         <td className="p-2 font-bold">Status</td>
                         <td className="p-2 font-bold text-center">Action</td>
@@ -32,6 +33,7 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                 <td className="p-2 ">{value.id}</td>
                 <td className="p-2 ">{value.name}</td>
                 <td className="p-2 ">{value.email}</td>
+                <td className="p-2 ">{value.role? `${value.role.charAt(0).toUpperCase() + value.role.slice(1)}`: ""}</td>
                 {/* <td>
                   {value.createdAt ? new Date(value.createdAt).toLocaleDateString() : "Unknown"}
                 </td> */}

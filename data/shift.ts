@@ -160,9 +160,10 @@ export async function getShiftDataFromDB(collectionId: string) {
 
           default:
             return null;
-            break;
         }
       }
+    }else{
+      return null
     }
   } catch (error) {
     throw new Error(error);
@@ -203,4 +204,23 @@ export async function getShiftDataForTheUser(userId: string) {
   }
 
   console.log(data);
+}
+
+
+export const deleteScheduleData = async (collectionId: string)=>{
+  const itemsRef = collection(db, `Organizations/${collectionId}/schedule`);
+  const deleteQuery = query(itemsRef);
+
+  try {
+    const querySnapshot = await getDocs(deleteQuery);
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach(async (document) => {
+        await deleteDoc(document.ref);
+      });
+    } else {
+      console.log("No document matches the specified id.");
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
 }

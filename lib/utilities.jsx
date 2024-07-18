@@ -110,16 +110,15 @@ export function filterShifts(scheduleData) {
           ["requested"]: false,
           ["hours"]: 0,
         });
-        // employees[shift.employee][day.day] = {["id"]: shift.id,};
-      } else {
-        employees[shift.employee][day.day] = {
-          day: day.day,
-          id: shift.id,
-          shift: convertTimeStamp(shift.shift),
-          requested: shift.requested,
-          hours: shift.hours,
-        };
+        // employees[shift.employee] = new Array(daysOfWeek).fill("Not Working");
       }
+      employees[shift.employee][day.day] = {
+        day: day.day,
+        id: shift.id,
+        shift: convertTimeStamp(shift.shift),
+        requested: shift.requested,
+        hours: shift.hours,
+      };
     });
   });
 
@@ -186,6 +185,7 @@ export async function getEmployeeData(organization) {
       email: doc.data().email,
       status: doc.data().status,
       id: doc.data().Id,
+      role: doc.data().role,
     });
   });
 
@@ -356,28 +356,14 @@ export const timeStampConversion = (data) => {
 };
 
 export const stringToTime = (shift) => {
-  let [start, end] = shift.split(",");
+  let [start, end] = shift.split("-");
+  
+  start = start.replace(/\s/g, "")
+  end = end.replace(/\s/g, "")
 
-  const startDate = new Date(parseInt(start, 10));
-
-  let startHours = startDate.getHours();
-  let startMin = parseInt("0" + startDate.getMinutes(), 10);
-
-  const startformattedHours = startHours < 10 ? "0" + startHours : startHours;
-  const startformattedMinutes = startMin < 10 ? "0" + startMin : startMin;
-
-  let startTime = startformattedHours + ":" + startformattedMinutes;
-
-  const endDate = new Date(parseInt(end, 10));
-
-  let endHours = endDate.getHours();
-  let endMin = parseInt("0" + endDate.getMinutes(), 10);
-
-  const endformattedHours = endHours < 10 ? "0" + endHours : endHours;
-  const endformattedMinutes = endMin < 10 ? "0" + endMin : endMin;
-
-  let endTime = endformattedHours + ":" + endformattedMinutes;
-
-  return [startTime, endTime]
+  if(start.includes("AM")){
+    const startTime = start.trim("AM")
+    console.log(startTime)
+  }
 
 };

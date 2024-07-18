@@ -16,8 +16,8 @@ const SearchBar = (props) => {
     };
 
     return (
-        <div className="flex justify-between">
-            <div className="flex items-center gap-2 bg-white border-2 border-black rounded-lg px-2 shadow-2xl">
+        <div className="flex">
+            {/* <div className="flex items-center gap-2 bg-white border-2 border-black rounded-lg px-2 shadow-2xl">
                 <MdSearch className="text-black" />
                 <input 
                     type="text" 
@@ -25,7 +25,7 @@ const SearchBar = (props) => {
                     onChange={handleSearch}
                     className="bg-transparent border-none w-36 text-black focus:outline-none"
                 />
-            </div>
+            </div> */}
             <Link href="/manager/employees/add">
                 <button className="bg-primary flex items-center gap-1 text-white rounded-lg p-2 cursor-pointer">
                     <span>Add</span>

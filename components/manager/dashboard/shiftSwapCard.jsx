@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 function ShiftSwapCard({ shift, scheduleData, required, id, day, shiftData }) {
   const [requested, setRequested] = useState();
   const [rawData, setRawData] = useState();
-  const [shiftTemp, setShiftTemp] = useState("") 
+  const [shiftTemp, setShiftTemp] = useState() 
 
   useEffect(() => {
     setRequested(required);
     setRawData(scheduleData)
+    console.log(shiftData)
   }, []);
 
   const changingShift = (e)=>{
@@ -20,7 +21,6 @@ function ShiftSwapCard({ shift, scheduleData, required, id, day, shiftData }) {
             val.shifts.map((shiftVal, x)=>{
                if(shiftVal.id == id){
                }else{
-                console.log()
                }
                
             })

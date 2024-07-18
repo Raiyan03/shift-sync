@@ -38,7 +38,8 @@ const registerUser = async (formData: FormData)=>{
     
     const id = Math.floor(Math.random() * 100000);
 
-    const realId = `${teamName.slice(0,6).toLowerCase()}-${5}${id}`;
+    let realId = `${teamName.slice(0,6).toLowerCase()}-${5}${id}`;
+    realId = realId.replace(/\s+/g, '')
 
     const hashedPassword = await saltAndHashPassword(password)
     

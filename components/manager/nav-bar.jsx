@@ -19,9 +19,9 @@ export default function Navbar({ toggleSidebar }) {
             <input type="text" placeholder='Search' className="w-full bg-transparent text-white text-lg rounded-md p-2 focus:outline-none"/>
           </div> */}
           <div className="flex gap-2 flex-grow items-center">
-            <MdOutlineChat size={20} />
+            {/* <MdOutlineChat size={20} />
             <MdNotifications size={20} />
-            <MdPublic size={20} />
+            <MdPublic size={20} /> */}
           </div>
         </div>
     </div>

@@ -13,42 +13,47 @@ function ShiftConfig({ id }) {
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [hoursOfOperation, setHoursOfOperation] = useState();
+  const [flexHours, setFlexHours] = useState();
+  const [flexHoursP, setFlexHoursP] = useState();
   const [hoursOfOperationP, setHoursOfOperationP] = useState();
 
   const getAndLogShiftData = async () => {
     const user = await getUser();
-    if(user !== undefined){
+    if (user !== undefined) {
       const shiftData = await getShiftData(user.id);
       let newShift = [...shifts];
-      if (shiftData != null) {
+      if (shiftData != null || shiftData != undefined) {
+        setHoursOfOperation(shiftData.hour_bank);
         setHoursOfOperationP(shiftData.hour_bank);
-  
+        setFlexHours(shiftData.flex_hours);
+        setFlexHoursP(shiftData.flex_hours);
+
         shiftData.shifts.map((shift, index) => {
           let [start, end] = shift.split(",");
-  
+
           const startDate = new Date(parseInt(start, 10));
-  
+
           let startHours = startDate.getHours();
           let startMin = parseInt("0" + startDate.getMinutes(), 10);
-  
+
           const startformattedHours =
             startHours < 10 ? "0" + startHours : startHours;
-          const startformattedMinutes = startMin < 10 ? "0" + startMin : startMin;
-  
-          let startTime =
-            startformattedHours + ":" + startformattedMinutes;
-  
+          const startformattedMinutes =
+            startMin < 10 ? "0" + startMin : startMin;
+
+          let startTime = startformattedHours + ":" + startformattedMinutes;
+
           const endDate = new Date(parseInt(end, 10));
-  
+
           let endHours = endDate.getHours();
           let endMin = parseInt("0" + endDate.getMinutes(), 10);
-  
+
           const endformattedHours = endHours < 10 ? "0" + endHours : endHours;
           const endformattedMinutes = endMin < 10 ? "0" + endMin : endMin;
-  
+
           let endTime = endformattedHours + ":" + endformattedMinutes;
-  
-          const newShiftData= newShift;
+
+          const newShiftData = newShift;
           if (newShiftData[index]) {
             newShiftData[index][`shiftStart`] = startTime;
             newShiftData[index][`shiftClose`] = endTime;
@@ -58,13 +63,11 @@ function ShiftConfig({ id }) {
               ["shiftClose"]: endTime,
             };
           }
-          newShift = newShiftData
+          newShift = newShiftData;
         });
-      setShifts(newShift);
-  
+        setShifts(newShift);
       }
     }
-    
   };
 
   useEffect(() => {
@@ -106,11 +109,26 @@ function ShiftConfig({ id }) {
         `${timeStamp(shift.shiftStart)},${timeStamp(shift.shiftClose)}`
       );
     });
-    await updateShifts(id, finalArray, parseInt(hoursOfOperation));
+    const resp = await updateShifts(
+      id,
+      finalArray,
+      parseInt(hoursOfOperation),
+      parseInt(flexHours)
+    );
+    if (resp == true) {
+      setTimeout(() => {
+        setSuccess(true);
+      },2000);
+    }
   };
 
   return (
     <div className="flex flex-col border shadow-md p-5 rounded-lg gap-2.5 ">
+              {success && setInterval(() => setSuccess(false), 5000) && (
+          <div className="text-center justify-center items-center mb-3 bg-green-300 py-2 mx-auto w-[300px] rounded-xl transition ease-in-out delay-150 duration-100 before:transition-all before:opacity-55">
+            Shifts Updated Successfully
+          </div>
+        )}
       <div className="flex gap-3">
         <MdApps size={32} />
         <h2 className="text-xl">Shift Config</h2>
@@ -125,6 +143,14 @@ function ShiftConfig({ id }) {
             type="number"
             className="bg-transparent border-primary border-2 rounded-md w-28"
             placeholder={hoursOfOperationP}
+          />
+          <label>Flex Hours:</label>
+          <input
+            value={flexHours}
+            onChange={(e) => setFlexHours(e.target.value)}
+            type="number"
+            className="bg-transparent border-primary border-2 rounded-md w-28"
+            placeholder={flexHoursP}
           />
         </span>
       </div>
@@ -186,11 +212,7 @@ function ShiftConfig({ id }) {
             Invalid Shifts
           </div>
         )} */}
-        {success && setInterval(() => setSuccess(false), 3000) && (
-          <div className="text-center justify-center items-center mb-3 bg-green-600 py-2 mx-auto w-[300px] rounded-xl transition ease-in-out delay-150 duration-100">
-            Shifts Updated Successfully
-          </div>
-        )}
+
         {shifts.map((shift, index) => (
           <div
             key={index}

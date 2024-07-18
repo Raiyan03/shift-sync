@@ -23,12 +23,10 @@ export default function Page() {
     const userData = await getUser();
     if(userData !== undefined){
       const scheduleData = await getScheduleData(userData.id);
+      console.log(userData)
       setShift(scheduleData);
       setUserId(userData.id);
-    }
-
-    
-    
+    }    
   };
 
   useEffect(() => {

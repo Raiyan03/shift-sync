@@ -66,28 +66,44 @@ export async function getEmployeeScheduleData(organization: string) {
   }
 }
 
-export async function getUserFromDB(email, password) {
+export async function getUserFromDB(email: string, password: string) {
   let user = [];
+
+  // const userRef = doc(db, 'Organizations', email)
+
+  // try{
+  //   const userDoc = await getDoc(userRef);
+  //   if(userDoc.exists){
+  //     console.log(userDoc.data())
+  //   }
+
+  // }catch(err)
+  // {
+  //   console.log(err)
+  // }
+
   const userReference = collection(db, "Organizations");
   const q = query(userReference, where("email", "==", email));
   try {
     const userSnapshots = await getDocs(q);
     if (!userSnapshots.empty) {
-      userSnapshots.forEach((doc) => {
-        const match = comparePass(password, doc.data().password);
+      for (const docData of userSnapshots.docs) {
+        const match = await comparePass(password, docData.data().password);
         if (match) {
-          user.push({
-            name: doc.data().name,
-            email: doc.data().email,
-            id: doc.data().id,
-            role: doc.data().role,
-          });
+        user.push({
+          name: docData.data().name,
+          email: docData.data().email,
+          id: docData.data().id,
+          role: docData.data().role,
+        });
+        }else{
+          return "Wrong Password"
         }
-      });
+      }
     } else {
       const totalDataSnap = await getDocs(query(userReference));
       if (!totalDataSnap.empty) {
-        for(const docData of totalDataSnap.docs){
+        for (const docData of totalDataSnap.docs) {
           if (docData.data().id.includes(email.slice(0, 4))) {
             const adminColQuery = doc(
               db,
@@ -97,17 +113,22 @@ export async function getUserFromDB(email, password) {
             const employeeSnapshot = await getDoc(adminColQuery);
 
             if (employeeSnapshot.exists()) {
-              const match = comparePass(password, employeeSnapshot.data().password);
-              if(match){
-              user.push({
-                name: employeeSnapshot.data().name,
-                id: employeeSnapshot.data().Id,
-                role: "employee",
-              })
+              const match = await comparePass(
+                password,
+                employeeSnapshot.data().password
+              );
+              if (match) {
+                user.push({
+                  name: employeeSnapshot.data().name,
+                  id: employeeSnapshot.data().Id,
+                  role: "employee",
+                });
+              }else{
+                return "Wrong Password"
               }
             }
           }
-        };
+        }
       }
     }
   } catch (error) {
@@ -123,7 +144,7 @@ export const saltAndHashPassword = async (rawPass) => {
   return hashedPassword;
 };
 
-export const comparePass = async (rawPass, hashedPassword) => {
+export const comparePass = async (rawPass: string, hashedPassword: string) => {
   const isMatched = await compare(rawPass, hashedPassword);
   if (isMatched) {
     return true;

@@ -10,7 +10,6 @@ import { getSession } from "@/lib/getSession"
 const loginUser = async (formData: FormData) =>{
     const email = formData.get('email');
     const password = formData.get('password');
-
     try{
        await signIn('credentials',{
         redirect: false,

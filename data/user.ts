@@ -88,14 +88,23 @@ export async function getUserFromDB(email: string, password: string) {
     const userSnapshots = await getDocs(q);
     if (!userSnapshots.empty) {
       for (const docData of userSnapshots.docs) {
+        // if(docData.data().password === password){
+        //   console.log("matched")
+        //   user.push({
+        //     name: docData.data().name,
+        //     email: docData.data().email,
+        //     id: docData.data().id,
+        //     role: docData.data().role,
+        //   });
+        // }
         const match = await comparePass(password, docData.data().password);
         if (match) {
-        user.push({
-          name: docData.data().name,
-          email: docData.data().email,
-          id: docData.data().id,
-          role: docData.data().role,
-        });
+          user.push({
+            name: docData.data().name,
+            email: docData.data().email,
+            id: docData.data().id,
+            role: docData.data().role,
+          });
         }
       }
     } else {
@@ -111,6 +120,13 @@ export async function getUserFromDB(email: string, password: string) {
             const employeeSnapshot = await getDoc(adminColQuery);
 
             if (employeeSnapshot.exists()) {
+              // if(password === employeeSnapshot.data().password){
+              //   user.push({
+              //     name: employeeSnapshot.data().name,
+              //     id: employeeSnapshot.data().Id,
+              //     role: "employee",
+              //   });
+              // }
               const match = await comparePass(
                 password,
                 employeeSnapshot.data().password

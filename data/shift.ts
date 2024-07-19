@@ -33,7 +33,25 @@ export async function getShiftData(userId: string) {
         return null;
       }
     } else {
-      return null;
+      const collQuery = query(collection(db, `Organizations`));
+      const collSnaps = await getDocs(collQuery);
+
+      if (!collSnaps.empty) {
+        for (const docData of collSnaps.docs) {
+          if (docData.data().id.includes(userId.slice(0, 4))) {
+            if (
+              docData.data().shifts !== undefined ||
+              docData.data().hour_bank !== undefined
+            ) {
+              return {
+                shifts: docData.data()?.shifts,
+                hour_bank: docData.data()?.hour_bank,
+                flex_hours: docData.data()?.flex_hours,
+              };
+            }
+          }
+        }
+      }
     }
   } catch (error) {
     console.log("Shift Data Not Found", error);
@@ -162,8 +180,8 @@ export async function getShiftDataFromDB(collectionId: string) {
             return null;
         }
       }
-    }else{
-      return null
+    } else {
+      return null;
     }
   } catch (error) {
     throw new Error(error);
@@ -202,12 +220,10 @@ export async function getShiftDataForTheUser(userId: string) {
       }
     }
   }
-
-  console.log(data);
+  return data;
 }
 
-
-export const deleteScheduleData = async (collectionId: string)=>{
+export const deleteScheduleData = async (collectionId: string) => {
   const itemsRef = collection(db, `Organizations/${collectionId}/schedule`);
   const deleteQuery = query(itemsRef);
 
@@ -221,6 +237,6 @@ export const deleteScheduleData = async (collectionId: string)=>{
       console.log("No document matches the specified id.");
     }
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
-}
+};

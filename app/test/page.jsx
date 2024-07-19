@@ -1,11 +1,12 @@
 "use client"
+import { getUserFromDB } from '@/data/user'
 import { stringToTime } from '@/lib/utilities'
 import React from 'react'
 
 const Page = () => {
 
-    const onClickTest = ()=>{
-        stringToTime("11:00 AM - 05:00 PM")
+    const onClickTest = async ()=>{
+      console.log(await getUserFromDB("admin@insinc.com", "123456"))
     }
   return (
     <div>

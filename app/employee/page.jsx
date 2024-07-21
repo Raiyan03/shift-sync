@@ -1,4 +1,3 @@
-import { logOutUser } from "@/action/actions"
 "use client"
 import { getUser, logOutUser } from "@/action/actions"
 import { getShiftData, getShiftDataForTheUser } from "@/data/shift"

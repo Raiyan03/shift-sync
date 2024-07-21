@@ -28,6 +28,11 @@ export async function getShiftData(userId:string){
     } catch (error) {
         console.log("Shift Data Not Found", error)
     }
+<<<<<<< Updated upstream
+=======
+  }
+  return data
+>>>>>>> Stashed changes
 }
 
 export async function getUserData(userId:string) {

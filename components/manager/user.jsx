@@ -8,7 +8,7 @@ export default function UserBatch (){
     
     const fetch = async ()=>{
         const user = await getUser()
-        if(user.id !== undefined){
+        if(user?.id !== undefined){
             setName(user.name)
             setPosition(user.role)
         }

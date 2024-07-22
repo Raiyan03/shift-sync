@@ -1,11 +1,10 @@
 "use client";
 
-//GPT 4.0 via Poe
-
 import React, { useState, useEffect } from 'react';
 import QrCodeComponent from './qr-code';
-import scheduleData from '../../../components/manager/evaluation/scheduleData.json';
 import './loader.css';
+import { getUser } from "@/action/actions";
+import { getEmployeeData } from "@/lib/utilities";
 
 export default function QrGenerate() {
   const [qrValue, setQrValue] = useState('');
@@ -14,29 +13,40 @@ export default function QrGenerate() {
   const [isLoading, setIsLoading] = useState(false);
   const [employeeNotFound, setEmployeeNotFound] = useState(false);
   const [employeeName, setEmployeeName] = useState('');
+  const [employeeNames, setEmployeeNames] = useState([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      const userData = await getUser();
+      const employees = await getEmployeeData(userData.id);
+      const employeeNames = employees.map(employee => employee.name); // Adjust based on the actual structure of the employee data
+      setEmployeeNames(employeeNames);
+    };
+
+    fetchEmployees();
+  }, []);
+
   const handleEmployeeChange = (event) => {
     const selectedEmployeeName = event.target.value;
 
-    // Validate electedEmployeeName in scheduleData
-    // 
+    // Validate selectedEmployeeName in employeeNames
     const isValidEmployee = isEmployeeValid(selectedEmployeeName);
 
     if (isValidEmployee) {
       setSelectedEmployee(selectedEmployeeName);
       setEmployeeName(selectedEmployeeName);
       setQrValue('');
-      setTimer(60); 
+      setTimer(60);
       setIsLoading(true);
       setEmployeeNotFound(false);
 
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
-      // if not valid, set selectedEmployee
     } else {
-      console.log(`Employee '${selectedEmployeeName}' is not in scheduleData.`);
+      console.log(`Employee '${selectedEmployeeName}' is not in the employee list.`);
       setSelectedEmployee('');
-      setEmployeeName(''); 
+      setEmployeeName('');
       setQrValue('');
       setTimer(60);
       setIsLoading(false);
@@ -71,27 +81,19 @@ export default function QrGenerate() {
           if (prevTimer === 1) {
             const newQrValue = generateQrValue(selectedEmployee);
             setQrValue(newQrValue);
-            return 60; 
+            return 60;
           }
           return prevTimer - 1;
         });
       }, 1000);
     }
 
-    return () => clearInterval(intervalId); // Cleanup on unmount or when selectedEmployee changes
+    return () => clearInterval(intervalId);
   }, [selectedEmployee]);
 
   const isEmployeeValid = (employeeName) => {
-    const employeeNames = Array.from(new Set(
-      scheduleData.schedule.flatMap(day => day.shifts.map(shift => shift.employee))
-    ));
     return employeeNames.includes(employeeName);
   };
-
-  // Extract unique employee names from scheduleData
-  const employeeNames = Array.from(new Set(
-    scheduleData.schedule.flatMap(day => day.shifts.map(shift => shift.employee))
-  ));
 
   return (
     <div className="flex flex-col items-center mt-2">
@@ -105,7 +107,7 @@ export default function QrGenerate() {
           <option key={index} value={name}>{name}</option>
         ))}
       </select>
-      {employeeNotFound && ( // Not found messages
+      {employeeNotFound && (
         <p className="text-red-500 mb-2">Employee not found</p>
       )}
       {isLoading ? (

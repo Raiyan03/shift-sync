@@ -67,7 +67,6 @@ export default function Evaluation({ scheduleData }) {
 
     return (
         <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
-            <h1 className="text-xl font-bold mb-4">Evaluation</h1>
             <div className="mb-4">
                 <h2 className="text-lg font-semibold mb-2">Select Employee</h2>
                 <select value={selectedEmployee} onChange={handleSelectChange} className="p-2 border rounded-md">

@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { logOutUser } from "@/action/actions";
+/*
+Added toggle sidebar and custom tailwind for hamburger menu
+must add link to the a href for the dashboard, full schedule, and preferences
+Added hover over animation that was implemented in the sidebar
+*/
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);

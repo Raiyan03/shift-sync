@@ -5,6 +5,16 @@ import { useEffect, useState } from "react"
 import TimeStampComp from "./timestamper"
 import Sidebar from "./sidebar/sidebar.jsx"
 
+/*
+Things changed
+Added useEffect for hover over animations
+added sidebar
+moved user data and get schedule button to the profile sidebar
+added edit profile button
+added img src for the image (local images only, have to find a way for employee firestore image edits)
+
+*/
+
 const Page = () => {
   // Contains personal employee information
   const [userData, setUserData] = useState()
@@ -49,9 +59,7 @@ const Page = () => {
             Get Schedule Data
           </button>
         )}
-        <form action={logOutUser} className="w-full flex flex-col items-center">
-          <button className="bg-red-500 w-3/4 py-2 mb-2 rounded transform transition-transform duration-300 hover:bg-red-600 hover:scale-110" type="submit">Logout</button>
-        </form>
+
       </div>
       <div className="w-3/4 bg-white p-4">
         <div>

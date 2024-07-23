@@ -18,22 +18,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         const email = credentials.email as string | undefined;
         const password = credentials.password as string | undefined;
-
         let user = null;
-
         if (!email || !password) {
           throw new CredentialsSignin("Please Provide both email & password");
         }
-
         const hashedPass = await saltAndHashPassword(password);
-
-        user = await getUserFromDB(email, hashedPass);
-
+        user = await getUserFromDB(email, password);
         if(!user){
           throw new Error("Invalid User Name or Password")
         }
-
-        console.log(user)
         return user;
       },
     }),

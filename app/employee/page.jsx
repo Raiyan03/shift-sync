@@ -33,47 +33,51 @@ const page = () => {
   useEffect(()=>{fetch()},[])
 
   return (
-    <div>
-        <div>
-          Employee
-        </div>
-        <p>Profile name: {userData?.name}</p>
-        <p>Employee ID: {userData?.id}</p>
-        <p>Employee status: {userData?.role}</p>
-        <form action={logOutUser}>
-            <button type="submit">Logout</button>
-        </form>
-        <div>
-          {userData && (
-            <button onClick={fetchScheduleData}> 
+    <div className="flex h-screen">
+        <div className="w-1/4 bg-gray-200 p-4 flex flex-col items-center">
+          <div className="">
+            <img src="/images/placeholder.png" alt="Profile" className="bg-gray-400 rounded-full w-24 h-24 mb-4 object-cover" />
+          </div>
+          <p className="text-center mb-2">Profile name: {userData?.name}</p>
+          <p className="text-center mb-2">Employee ID: {userData?.id}</p>
+          <p className="text-center mb-4">Employee status: {userData?.role}</p>
+          <button className="bg-yellow-400 w-3/4 py-2 mb-2 rounded" type="submit">Edit Profile</button>
+              {userData && (
+            <button className="bg-green-500 text-white py-2 px-4zzz rounded mb-4" onClick={fetchScheduleData}> 
               GetScheduleData
             </button>
           )}
+          <form action={logOutUser} className="w-full flex flex-col items-center">
+            <button className="bg-red-500 w-3/4 py-2 mb-2 rounded" type="submit">Logout</button>
+          </form>
         </div>
-        <div>
-          <table>
-            <thead>
-              <tr>
-                <td>Shift Day</td>
-                <td>Shift Time</td>
-                <td>Shift Length</td>
-                <td>Request Approval</td>
-              </tr>
-            </thead>
-            <tbody>
-              {data &&
-                data?.map((value, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>{value.day}</td>
-                      <TimeStampComp shiftStamp={value.shift.shift}/>
-                      <td>{value.shift.hours}</td>
-                      <td>{value.shift.requested.toString()}</td>
-                    </tr>
-                  )
-                })}
-            </tbody>
-          </table>
+        <div className="w-3/4 bg-white p-4">
+          <div>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b">
+                  <td className="p-2">Shift Day</td>
+                  <td className="p-2">Shift Time</td>
+                  <td className="p-2">Shift Length</td>
+                  <td className="p-2">Request Approval</td>
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  data?.map((value, index) => {
+                    return (
+                      <tr key={index} className="bg-gray-300 rounded-lg p-4 mb-4 flex items-center">
+                        <td className="p-2">{value.day}</td>
+                        <TimeStampComp shiftStamp={value.shift.shift}/>
+                        <td className="p-2">{value.shift.hours}</td>
+                        <td className="p-2">{value.shift.requested.toString()}</td>
+                      </tr>
+                    )
+                  })}
+              </tbody>
+            </table>
+            
+          </div>
         </div>
         {/* <button onClick={logOutUser}>Logout</button> */}
     </div>
@@ -81,5 +85,3 @@ const page = () => {
 }
 
 export default page
-
-//convertTimeStamp( (value.shift.shift[0]) , (value.shift.shift[1])) 

@@ -16,12 +16,14 @@ const page = () => {
         if(token){
           setUserData(token)
           console.log(userData)
+          console.log(token)
           console.log("Got to fetch, userData is set")
         }
         const netData = await getShiftData(userData?.id)
         setShiftData(netData)
         console.log("Shift data imported: ")
         console.log(netData)
+        console.log(shiftData)
     }
     
     useEffect(()=>{fetch()},[])

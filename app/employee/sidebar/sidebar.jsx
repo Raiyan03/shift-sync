@@ -1,10 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { MdDashboard, MdOutlineSupervisedUserCircle, MdSchedule, MdQrCodeScanner, MdSwapCalls, MdLogout, MdTableBar, MdTableChart, MdRoomPreferences, MdSettings, MdOutlineRoomPreferences } from "react-icons/md";
 import { logOutUser } from "@/action/actions";
+
 /*
 Added toggle sidebar and custom tailwind for hamburger menu
 must add link to the a href for the dashboard, full schedule, and preferences
 Added hover over animation that was implemented in the sidebar
+imported icons from Md to match the manager sidebar
 */
+
+const navbarItems = [
+  // added name of path so when u add those pages u just insert the name of the path
+  {
+    title: "Dashboard",
+    path: "/employee/(name of path)",
+    icon: <MdDashboard />,
+  },
+  {
+    title: "Full Schedule",
+    path: "/employee/(name of path)",
+    icon: <MdTableChart />,
+  },
+  {
+    title: "Preferences",
+    path: "/manager/(name of path)",
+    icon: <MdOutlineRoomPreferences />,
+  }
+];
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +35,10 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => setIsOpen(true), []);
+
   return (
-    <div className={`flex flex-col h-full bg-gray-200 p-4 ${isOpen ? 'w-1/4' : 'w-16'} transition-width duration-300`}>
+    <div className={`sm:hidden md:block text-black bg-secondary shadow-lg rounded-md p-4 sticky top-0 h-screen ${isOpen ? 'w-1/4' : 'w-16'} transition-width duration-300`}>
       <button 
         className="block md:hidden mb-4" 
         onClick={toggleSidebar}
@@ -25,13 +49,21 @@ const Sidebar = () => {
           <span className="block w-full h-0.5 bg-black"></span>
         </div>
       </button>
-      <div className={`${isOpen ? 'block' : 'hidden'} md:block`}>
-        <a href="#" className="block w-full bg-white p-2 mb-2 border border-black transform transition-transform duration-300 hover:bg-gray-300 hover:scale-105">Dashboard</a>
-        <a href="#" className="block w-full bg-white p-2 mb-2 border border-black transform transition-transform duration-300 hover:bg-gray-300 hover:scale-105">Full Schedule</a>
-        <a href="#" className="block w-full bg-white p-2 mb-2 border border-black transform transition-transform duration-300 hover:bg-gray-300 hover:scale-105">Preferences</a>
-      </div>
-      <form action={logOutUser} className={`mt-auto ${isOpen ? 'block' : 'hidden'} md:block`}>
-        <button className="bg-red-500 text-white w-full py-2 border border-black transform transition-transform duration-300 hover:bg-red-600 hover:scale-105" type="submit">Logout</button>
+      <ul className={`flex flex-col gap-5 overflow-auto mt-5 ${isOpen ? 'block' : 'hidden'} md:block`}>
+        {navbarItems.map((item) => (
+          <li key={item.title} className="block">
+            <a href={item.path} className="flex items-center gap-2 text-lg p-2 rounded-md hover:bg-gray-300 transition-colors duration-300">
+              {item.icon}
+              {item.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <form action={logOutUser} className={`absolute bottom-7 left-14 w-full pb-2 font-bold text-logOutButton gap-2 text-xl ${isOpen ? 'block' : 'hidden'} md:block`}>
+        <button className="flex items-center gap-2" type="submit">
+          <MdLogout />
+          Logout
+        </button>
       </form>
     </div>
   );

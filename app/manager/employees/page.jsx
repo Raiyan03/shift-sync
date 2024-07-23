@@ -9,15 +9,12 @@ export default function Employees() {
     const fetchData = async () => {
       const userData = await getUser();
       const employees = await getEmployeeData(userData.id);
-      console.log(employees);
       const data = {
         employees,
       };
-  
       setEmployeeData(data);
       // console.log(data);
     };
-  
     useEffect(() => {
       fetchData();
     }, []);
@@ -25,6 +22,10 @@ export default function Employees() {
         
         <div>
             <UserTable employeeData={employeeData} setEmployeeData={setEmployeeData}/>
+            {/* <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
+                <h1 className="text-xl font-bold mb-4">Evaluation</h1>
+                <Evaluation />
+            </div> */}
         </div>
     )
 }

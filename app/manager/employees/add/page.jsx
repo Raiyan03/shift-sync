@@ -53,7 +53,7 @@ export default function AddUser() {
 
     let realId = `${userData.id.slice(0, 4)}-${9}${id}`;
 
-    // realId = realId.replace(/\s+/g, '')
+    realId = realId.replace(/\s+/g, '')
 
     const splitMean = (string) => {
       if (string == "any") return string;

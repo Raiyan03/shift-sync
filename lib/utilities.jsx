@@ -355,16 +355,64 @@ export const timeStampConversion = (data) => {
   return `${startformattedHours}:${startformattedMinutes} ${period} - ${endformattedHours}:${endformattedMinutes} ${period2}`;
 };
 
-export const stringToTime = (shift) => {
-  let [start, end] = shift.split("-");
+export const stringToTime = (timeString) => {
+  // let [start, end] = shift.split("-");
 
-  start = start.replace(/\s/g, "");
-  end = end.replace(/\s/g, "");
+  // start = start.replace(/\s/g, "");
+  // end = end.replace(/\s/g, "");
 
-  if (start.includes("AM")) {
-    const startTime = start.trim("AM");
-    console.log(startTime);
+  // if (start.includes("AM")) {
+  //   const startTime = start.trim("AM");
+  //   console.log(startTime);
+  // }
+  // const [startTime, endTime] = timeString.split(" - ");
+  // const startDate = new Intl.DateTimeFormat("en-US", {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   hour12: true,
+  // }).parse(startTime);
+  // const endDate = new Intl.DateTimeFormat("en-US", {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   hour12: true,
+  // }).parse(endTime);
+  const [startTime, endTime] = timeString.split(' - ');
+  let [startHour, startMinute] = startTime.split(':');
+  let [endHour, endMinute] = endTime.split(':');
+
+  // Handle 12-hour format with AM/PM
+  if (startTime.includes('AM') || startTime.includes('PM')) {
+    const startAmPm = startTime.includes('PM')? 'PM' : 'AM';
+    startHour = parseInt(startHour);
+    if (startAmPm === 'PM' && startHour!== 12) {
+      startHour += 12;
+    }
+  } else {
+    // Handle 24-hour format
+    startHour = parseInt(startHour);
   }
+
+  if (endTime.includes('AM') || endTime.includes('PM')) {
+    const endAmPm = endTime.includes('PM')? 'PM' : 'AM';
+    endHour = parseInt(endHour);
+    if (endAmPm === 'PM' && endHour!== 12) {
+      endHour += 12;
+    }
+  } else {
+    endHour = parseInt(endHour);
+  }
+
+  const startDate = new Date();
+  startDate.setHours(startHour);
+  startDate.setMinutes(parseInt(startMinute));
+  startDate.setSeconds(0);
+
+  const endDate = new Date();
+  endDate.setHours(endHour);
+  endDate.setMinutes(parseInt(endMinute));
+  endDate.setSeconds(0);
+
+  return [startDate.getTime(), endDate.getTime()];
 };
 
 export function newConvertTimeStamp(data) {

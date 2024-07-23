@@ -19,50 +19,57 @@ const page = () => {
           console.log(token)
           console.log("Got to fetch, userData is set")
         }
+        
+    }
+    
+    const fetchShiftData = async() => {
         const netData = await getShiftData(userData?.id)
-        setShiftData(netData)
+        console.log("Raw awaited data: ")
+        console.log(netData.shifts)
+        setShiftData(netData.shifts)
         console.log("Shift data imported: ")
-        console.log(netData)
-        console.log(shiftData)
+        console.log(JSON.stringify(shiftData))
     }
     
     useEffect(()=>{fetch()},[])
     
     //Constants
-    //const preferences = Array(7)
+    const days = Array(7)
 
     const rowsData = [
-        { id: 1, day: 'Mon', selectedOption: '0' },
-        { id: 2, day: 'Tue', selectedOption: '0' },
-        { id: 3, day: 'Wed', selectedOption: '0' },
-        { id: 4, day: 'Thu', selectedOption: '0' },
-        { id: 5, day: 'Fri', selectedOption: '0' },
-        { id: 6, day: 'Sat', selectedOption: '0' },
-        { id: 7, day: 'Sun', selectedOption: '0' }
+        { id: 0, day: 'Mon', selectedOption: 0 },
+        { id: 1, day: 'Tue', selectedOption: 0 },
+        { id: 2, day: 'Wed', selectedOption: 0 },
+        { id: 3, day: 'Thu', selectedOption: 0 },
+        { id: 4, day: 'Fri', selectedOption: 0 },
+        { id: 5, day: 'Sat', selectedOption: 0 },
+        { id: 6, day: 'Sun', selectedOption: 0 }
     ]
 
-    const availableShifts = []
+    //Each available shift, converted from {unixStart, unixEnd} to a simple Timestamp
+    const availableShiftOptions = []
+    //Each timestamp shift, now held instead as {dayInt, timestamp}
     const options = []
 
     //For each UNIX set of shifts, convert to timestamp
     //Store each in a list of actual times
     shiftData?.forEach((shift) => {
-        availableShifts.push(convertTimeStamp(shift))
+        availableShiftOptions.push(convertTimeStamp(shift))
         console.log("Shift pushed to options: ")
-        console.log(converTimeStamp(shift)) 
+        console.log(convertTimeStamp(shift))
     })
     
     //Log for validation
     console.log("Full list of shifts in timestamp form: ")
-    console.log(availableShifts)
+    console.log(availableShiftOptions)
     
     //For each stored timestamp, turn into option for selector
     //Value should be the 'int' corresponding to shift chosen
     //Label will be actual timestamp
     //Store each in list of options
     let counter = 0
-    availableShifts.forEach((convertedShift) => {
-        const newVal = {value: counter, label: convertedShift}
+    availableShiftOptions.forEach((convertedShift) => {
+        const newVal = {value: "shift" + counter, label: convertedShift}
         counter++
         options.push(newVal)
         console.log("New option pushed to options: ")
@@ -82,11 +89,17 @@ const page = () => {
     };
 
     //Page render
+    //
+    //Includes temporary button to remove shift information retrieval
     return (
         <div>
             <h1> Availability Selector</h1>
             <p> Some information goes here </p>
-            
+            <div>
+                {userData && (
+                <button onClick={fetchShiftData}>GetShiftData</button>
+                 )}
+            </div>
             <table>
               <thead>
                 <tr>
@@ -100,7 +113,7 @@ const page = () => {
                    key={row.id}
                    rowData={row}
                    options={options}
-                 onSelectChange={handleSelectChange}
+                   onSelectChange={handleSelectChange}
                 />
                 ))}
             </tbody>

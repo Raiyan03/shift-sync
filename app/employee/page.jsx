@@ -19,8 +19,9 @@ const page = () => {
     console.log(shiftData)
     console.log("logging shift data held: ")
     console.log(data)
-    const netData = await getShiftData(userData?.id)
-    console.log(netData.shifts)
+    //const netData = await getShiftData(userData?.id)
+    //console.log("Retrieving JUST shifts from temp const: ")
+    //console.log(netData.shifts)
   }
 
   const fetch = async ()=>{

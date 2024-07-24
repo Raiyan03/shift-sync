@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import SearchBar from "@/components/manager/employees/search"
 import { deleteEmployee, getEmployeeData } from '@/lib/utilities';
 import { redirect, useRouter } from 'next/navigation';
+import { IoEyeSharp } from "react-icons/io5";
 import { MdBuild, MdOutlineRemoveCircleOutline, MdPreview, MdViewCompact } from 'react-icons/md';
 const UserTable = ({ employeeData, setEmployeeData }) => {
     const [data, setData] = useState(employeeData);
@@ -44,7 +45,7 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                   <div className="flex gap-10 justify-center">
                     <Link href={`/manager/employees/${value.id}`}>
                       <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer ">
-                        <MdBuild size={30} />
+                        <IoEyeSharp size={30} />
                       </button>
                     </Link>
                       <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployee(userData.id, value.id); window.location.reload()}}>

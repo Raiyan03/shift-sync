@@ -69,6 +69,14 @@ export default function SingleUserPage({ params }) {
               />
             </div>
           </div>
+          <label>Name</label>
+          <input
+            type="text"
+            name="name"
+            className="p-8 w-1/6 h-1.5 text-center text-black rounded-md mb-3 border-2 border-primary"
+            placeholder={data?.name}
+            minLength={4}
+          />
           <label>Password</label>
           <input
             type="password"

@@ -88,11 +88,12 @@ const getUser = async()=>{
 }
 
 const updateUserData = async(formData: FormData)=>{
-    const {id, email, password, status, role} = Object.fromEntries(formData)
+    const {id, name, email, password, status, role} = Object.fromEntries(formData)
     
     try{
         const updatedFields = {
-            email, 
+            email,
+            name, 
             password, 
             status, 
             role

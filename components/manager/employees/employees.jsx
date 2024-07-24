@@ -5,11 +5,11 @@ import { getUser } from '@/action/actions';
 import { useState, useEffect } from 'react';
 import SearchBar from "@/components/manager/employees/search"
 import { deleteEmployee, getEmployeeData } from '@/lib/utilities';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import { MdBuild, MdOutlineRemoveCircleOutline, MdPreview, MdViewCompact } from 'react-icons/md';
 const UserTable = ({ employeeData, setEmployeeData }) => {
-  console.log(employeeData);
     const [data, setData] = useState(employeeData);
-    console.log(data);
+    const {push} = useRouter()
     return (
         <div className="mt-4 flex flex-col bg-secondary shadow-md border rounded-md p-4">
             <SearchBar placeholder="Search for user" employeeData={employeeData} setData={setData} location="users" />
@@ -41,14 +41,14 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                   {value.status ? "Full Time" : "Part Time"}
                 </td>
                 <td className="p-2 ">
-                  <div className="flex gap-2 justify-around">
-                    <Link href={`/manager/employees/${value.Id}`}>
-                      <button className="px-1 py-2 bg-emerald-500 text-text border-none  rounded-md cursor-pointer ">
-                        View
+                  <div className="flex gap-10 justify-center">
+                    <Link href={`/manager/employees/${value.id}`}>
+                      <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer ">
+                        <MdBuild size={30} />
                       </button>
                     </Link>
-                      <button className="px-1 py-2 bg-accent2 text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployee(userData.id, value.id);redirect('/manager/employees')}}>
-                        Delete
+                      <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployee(userData.id, value.id); window.location.reload()}}>
+                        <MdOutlineRemoveCircleOutline size={30}/>
                       </button>
                   </div>
                 </td>

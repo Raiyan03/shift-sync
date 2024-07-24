@@ -1,9 +1,9 @@
 "use client"
-import { getUser, logOutUser } from "@/action/actions"
-import { getShiftDataForTheUser } from "@/data/shift"
-import { useEffect, useState } from "react"
-import TimeStampComp from "./timestamper"
-import Sidebar from "./sidebar/sidebar.jsx"
+import { getUser, logOutUser } from "@/action/actions";
+import { getShiftDataForTheUser } from "@/data/shift";
+import { useEffect, useState } from "react";
+import TimeStampComp from "./timestamper";
+import Sidebar from "./sidebar/sidebar.jsx";
 
 /*
 Things changed
@@ -12,35 +12,36 @@ added sidebar
 moved user data and get schedule button to the profile sidebar
 added edit profile button
 added img src for the image (local images only, have to find a way for employee firestore image edits)
-
 */
 
 const Page = () => {
   // Contains personal employee information
-  const [userData, setUserData] = useState()
+  const [userData, setUserData] = useState();
   // Contains shift and schedule information for employee
-  const [data, setData] = useState()
+  const [data, setData] = useState();
 
   const fetchScheduleData = async () => {
     // Current best practice to store shifts
-    const shiftData = await getShiftDataForTheUser(userData?.id)
-    setData(shiftData)
-    console.log("Logging shift data imported: ")
-    console.log(shiftData)
-    console.log("logging shift data held: ")
-    console.log(data)
-  }
+    const shiftData = await getShiftDataForTheUser(userData?.id);
+    setData(shiftData);
+    console.log("Logging shift data imported: ");
+    console.log(shiftData);
+    console.log("logging shift data held: ");
+    console.log(data);
+  };
 
   const fetch = async () => {
-    const token = await getUser()
+    const token = await getUser();
     if (token) {
-      setUserData(token)
-      console.log(userData)
-      console.log("Got to fetch, userData is set")
+      setUserData(token);
+      console.log(userData);
+      console.log("Got to fetch, userData is set");
     }
-  }
+  };
 
-  useEffect(() => { fetch() }, [])
+  useEffect(() => {
+    fetch();
+  }, []);
 
   return (
     <div className="flex h-screen">
@@ -59,35 +60,33 @@ const Page = () => {
             Get Schedule Data
           </button>
         )}
-
       </div>
       <div className="w-3/4 bg-white p-4">
         <div>
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b">
-                <td className="p-2">Shift Day</td>
-                <td className="p-2">Shift Time</td>
-                <td className="p-2">Shift Length</td>
-                <td className="p-2">Request Approval</td>
+                <th className="p-2">Shift Day</th>
+                <th className="p-2">Shift Time</th>
+                <th className="p-2">Shift Length</th>
+                <th className="p-2">Request Approval</th>
               </tr>
             </thead>
             <tbody>
-              {data &&
-                data?.map((value, index) => (
-                  <tr key={index} className="bg-gray-300 rounded-lg p-4 mb-4 flex items-center">
-                    <td className="p-2">{value.day}</td>
-                    <TimeStampComp shiftStamp={value.shift.shift} />
-                    <td className="p-2">{value.shift.hours}</td>
-                    <td className="p-2">{value.shift.requested.toString()}</td>
-                  </tr>
-                ))}
+              {data && data.map((value, index) => (
+                <tr key={index} className="border-b bg-gray-300">
+                  <td className="p-2">{value.day}</td>
+                  <td className="p-2">{value.shift.shift}</td>
+                  <td className="p-2">{value.shift.hours}</td>
+                  <td className="p-2">{value.shift.requested.toString()}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

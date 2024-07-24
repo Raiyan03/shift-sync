@@ -61,15 +61,15 @@ const Page = () => {
           </button>
         )}
       </div>
-      <div className="w-3/4 bg-white p-4">
+      <div className="w-3/4 bg-white p-4 overflow-x-auto">
         <div>
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b">
-                <th className="p-2">Shift Day</th>
-                <th className="p-2">Shift Time</th>
-                <th className="p-2">Shift Length</th>
-                <th className="p-2">Request Approval</th>
+                <th className="p-2 text-left">Shift Day</th>
+                <th className="p-2 text-left">Shift Time</th>
+                <th className="p-2 text-left">Shift Length</th>
+                <th className="p-2 text-left">Request Approval</th>
               </tr>
             </thead>
             <tbody>

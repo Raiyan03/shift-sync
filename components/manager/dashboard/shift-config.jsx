@@ -31,10 +31,10 @@ function ShiftConfig({ id }) {
         shiftData.shifts.map((shift, index) => {
           let [start, end] = shift.split(",");
 
-          const startDate = new Date(parseInt(start, 10));
+          const startDate = new Date(parseInt(start));
 
           let startHours = startDate.getHours();
-          let startMin = parseInt("0" + startDate.getMinutes(), 10);
+          let startMin = startDate.getMinutes();
 
           const startformattedHours =
             startHours < 10 ? "0" + startHours : startHours;
@@ -43,7 +43,7 @@ function ShiftConfig({ id }) {
 
           let startTime = startformattedHours + ":" + startformattedMinutes;
 
-          const endDate = new Date(parseInt(end, 10));
+          const endDate = new Date(parseInt(end));
 
           let endHours = endDate.getHours();
           let endMin = parseInt("0" + endDate.getMinutes(), 10);
@@ -52,7 +52,6 @@ function ShiftConfig({ id }) {
           const endformattedMinutes = endMin < 10 ? "0" + endMin : endMin;
 
           let endTime = endformattedHours + ":" + endformattedMinutes;
-
           const newShiftData = newShift;
           if (newShiftData[index]) {
             newShiftData[index][`shiftStart`] = startTime;
@@ -96,9 +95,10 @@ function ShiftConfig({ id }) {
     minutes = parseInt(minutes, 10);
 
     dateObj.setMinutes(minutes);
+
     dateObj.setHours(hours);
 
-    return dateObj.valueOf();
+    return (Math.floor(dateObj.valueOf()/10000))*10000;
   };
 
   const SubmitShifts = async () => {
@@ -109,6 +109,25 @@ function ShiftConfig({ id }) {
         `${timeStamp(shift.shiftStart)},${timeStamp(shift.shiftClose)}`
       );
     });
+
+    var [s,e] = finalArray[shifts.length - 1].split(",")
+
+    var againstT = new Date(parseInt(e))
+    var againstY = new Date(parseInt(s))
+    const timeNow = new Date();
+
+    // if(againstY.getHours() < timeNow.getHours()){
+    //   againstY.setDate(againstY.getDate()+1)
+    //   s = againstY.valueOf()
+    //   finalArray[shifts.length - 1] = `${s},${e}`
+    // }
+
+    if(againstT.getHours() < timeNow.getHours()){
+      againstT.setDate(againstT.getDate()+1)
+      e = againstT.valueOf()
+      finalArray[shifts.length - 1] = `${s},${e}`
+    }
+
     const resp = await updateShifts(
       id,
       finalArray,

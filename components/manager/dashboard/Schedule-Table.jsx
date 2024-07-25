@@ -60,6 +60,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       },
     });
 
+    console.log(data)
     const scheduleData = await res.json();
     setRawData(data);
     const shifts = filterShifts(scheduleData);

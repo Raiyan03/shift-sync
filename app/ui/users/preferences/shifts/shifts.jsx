@@ -92,7 +92,7 @@ export default function Shifts({ day, setPreference }) {
         schedule.shifts?.map((value, index) => {
           return <option value={`${day}-${index}`}>{newConvertTimeStamp(value)}</option>;
         }): ""}
-        <option value="NA">Not Available</option>
+        {/* <option value="NA">Not Available</option> */}
     </select>
   );
 }

@@ -91,7 +91,7 @@ function ShiftSwapCard({
         name="shiftSelected"
         value={shiftTemp}
         className={
-          requested ? `p-2 bg-[#50C878] rounded text-white` : "p-2 rounded"
+          requested ? `p-2 bg-[#50C878] rounded text-white w-full` : "p-2 rounded w-full"
         }
         id=""
         onChange={(e) => {

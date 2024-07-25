@@ -48,7 +48,7 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                         <IoEyeSharp size={30} />
                       </button>
                     </Link>
-                      <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployee(userData.id, value.id); window.location.reload()}}>
+                      <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployee(userData.id, value.id)}}>
                         <MdOutlineRemoveCircleOutline size={30}/>
                       </button>
                   </div>

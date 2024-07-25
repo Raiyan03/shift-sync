@@ -1,88 +1,92 @@
 "use client"
-import { getUser, logOutUser } from "@/action/actions"
-import { getShiftData, getShiftDataForTheUser } from "@/data/shift"
-import { useEffect, useState } from "react"
-import { convertTimeStamp } from "@/lib/utilities.jsx"
-import TimeStampComp from "./timestamper"
+import { getUser, logOutUser } from "@/action/actions";
+import { getShiftDataForTheUser } from "@/data/shift";
+import { useEffect, useState } from "react";
+import TimeStampComp from "./timestamper";
+import Sidebar from "./sidebar/sidebar.jsx";
 
-const page = () => {
-  //Contains personal employee information
-  const [userData, setUserData] = useState()
-  //Contains shift and schedule information for employee
-  const [data, setData] = useState()
+/*
+Things changed
+Added useEffect for hover over animations
+added sidebar
+moved user data and get schedule button to the profile sidebar
+added edit profile button
+added img src for the image (local images only, have to find a way for employee firestore image edits)
+*/
 
-  const fetchScheduleData = async() => {
-    //Current best practice to store shifts
-    const shiftData = await getShiftDataForTheUser(userData?.id)
-    setData(shiftData)
-    console.log("Logging shift data imported: ")
-    console.log(shiftData)
-    console.log("logging shift data held: ")
-    console.log(data)
-    //const netData = await getShiftData(userData?.id)
-    //console.log("Retrieving JUST shifts from temp const: ")
-    //console.log(netData.shifts)
-  }
+const Page = () => {
+  // Contains personal employee information
+  const [userData, setUserData] = useState();
+  // Contains shift and schedule information for employee
+  const [data, setData] = useState();
 
-  const fetch = async ()=>{
-    const token = await getUser()
-    if(token){
-      setUserData(token)
-      console.log(userData)
-      console.log("Got to fetch, userData is set")
+  const fetchScheduleData = async () => {
+    // Current best practice to store shifts
+    const shiftData = await getShiftDataForTheUser(userData?.id);
+    setData(shiftData);
+    console.log("Logging shift data imported: ");
+    console.log(shiftData);
+    console.log("logging shift data held: ");
+    console.log(data);
+  };
+
+  const fetch = async () => {
+    const token = await getUser();
+    if (token) {
+      setUserData(token);
+      console.log(userData);
+      console.log("Got to fetch, userData is set");
     }
-  }
+  };
 
-  useEffect(()=>{fetch()},[])
+  useEffect(() => {
+    fetch();
+  }, []);
 
   return (
-    <div>
-        <div>
-          Employee
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <Sidebar userData={userData} />
+      <div className="w-1/4 bg-gray-200 p-4 flex flex-col items-center">
+        <div className="">
+          <img src="/images/placeholder.png" alt="Profile" className="bg-gray-400 rounded-full w-24 h-24 mb-4 object-cover" />
         </div>
-        <p>Profile name: {userData?.name}</p>
-        <p>Employee ID: {userData?.id}</p>
-        <p>Employee status: {userData?.role}</p>
-        <form action={logOutUser}>
-            <button type="submit">Logout</button>
-        </form>
+        <p className="text-center mb-2">Profile name: {userData?.name}</p>
+        <p className="text-center mb-2">Employee ID: {userData?.id}</p>
+        <p className="text-center mb-4">Employee status: {userData?.role}</p>
+        <button className="bg-yellow-400 w-3/4 py-2 mb-2 rounded transform transition-transform duration-300 hover:bg-yellow-500 hover:scale-110" type="submit">Edit Profile</button>
+        {userData && (
+          <button className="bg-green-500 text-white py-2 px-4 rounded mb-4 transform transition-transform duration-300 hover:bg-green-600 hover:scale-110" onClick={fetchScheduleData}>
+            Get Schedule Data
+          </button>
+        )}
+      </div>
+      <div className="w-3/4 bg-white p-4 overflow-x-auto">
         <div>
-          {userData && (
-            <button onClick={fetchScheduleData}> 
-              GetScheduleData
-            </button>
-          )}
-        </div>
-        <div>
-          <table>
+          <table className="w-full border-collapse">
             <thead>
-              <tr>
-                <td>Shift Day</td>
-                <td>Shift Time</td>
-                <td>Shift Length</td>
-                <td>Request Approval</td>
+              <tr className="border-b">
+                <th className="p-2 text-left">Shift Day</th>
+                <th className="p-2 text-left">Shift Time</th>
+                <th className="p-2 text-left">Shift Length</th>
+                <th className="p-2 text-left">Request Approval</th>
               </tr>
             </thead>
             <tbody>
-              {data &&
-                data?.map((value, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>{value.day}</td>
-                      <TimeStampComp shiftStamp={value.shift.shift}/>
-                      <td>{value.shift.hours}</td>
-                      <td>{value.shift.requested.toString()}</td>
-                    </tr>
-                  )
-                })}
+              {data && data.map((value, index) => (
+                <tr key={index} className="border-b bg-gray-300">
+                  <td className="p-2">{value.day}</td>
+                  <TimeStampComp shiftStamp={value.shift.shift} className="p-2" />
+                  <td className="p-2">{value.shift.hours}</td>
+                  <td className="p-2">{value.shift.requested.toString()}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-        {/* <button onClick={logOutUser}>Logout</button> */}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default page
-
-//convertTimeStamp( (value.shift.shift[0]) , (value.shift.shift[1])) 
+export default Page;

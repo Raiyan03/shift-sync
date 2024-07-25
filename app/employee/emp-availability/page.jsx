@@ -26,9 +26,11 @@ const page = () => {
         const netData = await getShiftData(userData?.id)
         console.log("Raw awaited data: ")
         console.log(netData.shifts)
+        console.log(JSON.stringify(netData))
         setShiftData(netData.shifts)
-        console.log("Shift data imported: ")
-        console.log(JSON.stringify(shiftData))
+        //console.log("Shift data imported: ")
+        //console.log(JSON.stringify(shiftData))
+        
     }
     
     useEffect(()=>{fetch()},[])
@@ -37,28 +39,36 @@ const page = () => {
     const days = Array(7)
 
     const rowsData = [
-        { id: 0, day: 'Mon', selectedOption: 0 },
-        { id: 1, day: 'Tue', selectedOption: 0 },
-        { id: 2, day: 'Wed', selectedOption: 0 },
-        { id: 3, day: 'Thu', selectedOption: 0 },
-        { id: 4, day: 'Fri', selectedOption: 0 },
-        { id: 5, day: 'Sat', selectedOption: 0 },
-        { id: 6, day: 'Sun', selectedOption: 0 }
+        { id: 0, day: 'Mon', selectedOption: '0' },
+        { id: 1, day: 'Tue', selectedOption: '0' },
+        { id: 2, day: 'Wed', selectedOption: '0' },
+        { id: 3, day: 'Thu', selectedOption: '0' },
+        { id: 4, day: 'Fri', selectedOption: '0' },
+        { id: 5, day: 'Sat', selectedOption: '0' },
+        { id: 6, day: 'Sun', selectedOption: '0' }
     ]
 
     //Each available shift, converted from {unixStart, unixEnd} to a simple Timestamp
     const availableShiftOptions = []
     //Each timestamp shift, now held instead as {dayInt, timestamp}
-    const options = []
+    //const options = []
 
     //For each UNIX set of shifts, convert to timestamp
     //Store each in a list of actual times
     shiftData?.forEach((shift) => {
         availableShiftOptions.push(convertTimeStamp(shift))
         console.log("Shift pushed to options: ")
+        console.log(shift)
         console.log(convertTimeStamp(shift))
     })
     
+    /*
+    for (const shift in shiftData) {
+        console.log("Individual shift:")
+        console.log(shift)
+    }
+    */
+
     //Log for validation
     console.log("Full list of shifts in timestamp form: ")
     console.log(availableShiftOptions)
@@ -67,6 +77,8 @@ const page = () => {
     //Value should be the 'int' corresponding to shift chosen
     //Label will be actual timestamp
     //Store each in list of options
+    //Each "shift" object is NOT the requested array, but instead a string, so conversion is needed
+    /*
     let counter = 0
     availableShiftOptions.forEach((convertedShift) => {
         const newVal = {value: "shift" + counter, label: convertedShift}
@@ -75,6 +87,15 @@ const page = () => {
         console.log("New option pushed to options: ")
         console.log(newVal)
     })
+        
+    */
+   const options = [
+    {value: "0", label: "08:00AM - 01:00PM"},
+    {value: "1", label: "11:00PM - 03:00PM"},
+    {value: "2", label: "01:00PM - 05:00PM"}
+   ]
+   
+   
 
     const [rows, setRows] = useState(rowsData);
 

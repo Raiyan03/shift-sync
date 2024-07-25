@@ -1,6 +1,6 @@
 "use client"
 
-import { MdDashboard, MdOutlineSupervisedUserCircle, MdSchedule, MdGasMeter, MdLogout, MdEvent, MdQrCodeScanner, MdSwapCalls } from "react-icons/md";
+import { MdDashboard, MdOutlineSupervisedUserCircle, MdSchedule, MdGasMeter, MdLogout, MdEvent, MdQrCodeScanner, MdSwapCalls, MdCheck } from "react-icons/md";
 import NavLinks from "@/components/manager/nav-links";
 import Link from "next/link";
 import UserBatch from "@/components/manager/user";
@@ -34,7 +34,7 @@ const navbarItems = {
       title: "Shift Swap",
       path: "/manager/shift-swap",
       icon: <MdSwapCalls />,
-    }
+    },
     // {
     //   title: "Generate Schedule",
     //   path: "/dashboard/getSchedule",

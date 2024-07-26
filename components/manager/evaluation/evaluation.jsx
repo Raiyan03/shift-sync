@@ -91,8 +91,7 @@ export default function Evaluation({ scheduleData }) {
   ];
 
   return (
-    <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
-      <h1 className="text-xl font-bold mb-4">Evaluation</h1>
+    <div className="flex flex-col">
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Select Employee</h2>
         <select
@@ -154,8 +153,8 @@ export default function Evaluation({ scheduleData }) {
       {totalHours > 0 && (
         <div className="mt-4">
           <h2 >Employee Hours</h2>
-          <p>Employee: {selectedEmployee}</p>
-          <p>Total Hours: {totalHours}</p>
+          <p>Employee: <span className="text-blue-500">{selectedDays}</span></p>
+          <p>Total Hours: <span className="text-blue-500">{totalHours}</span></p>
         </div>
       )}
       {/* {totalHours !== null && (

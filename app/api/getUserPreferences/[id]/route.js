@@ -1,4 +1,4 @@
-import { getScheduleData } from "@/app/lib/utilities";
+import { getScheduleData } from "@/lib/utilities";
 import { NextResponse } from "next/server";
 
 export async function GET(req, {params}){

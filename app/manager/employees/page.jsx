@@ -1,29 +1,32 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getUser } from "@/action/actions";
-import UserTable from "@/components/manager/employees/employees"
+import UserTable from "@/components/manager/employees/employees";
 import { getEmployeesDataFromDB } from "@/server/calls";
+import Evaluation from "@/components/manager/evaluation/evaluation";
 export default function Employees() {
-    const [employeeData, setEmployeeData] = useState();
-    const fetchData = async () => {
-      const userData = await getUser();
-      const employees = await getEmployeesDataFromDB(userData.id);
-      const data = {
-        employees,
-      };
-      setEmployeeData(data);
+  const [employeeData, setEmployeeData] = useState();
+  const fetchData = async () => {
+    const userData = await getUser();
+    const employees = await getEmployeesDataFromDB(userData.id);
+    const data = {
+      employees,
     };
-    useEffect(() => {
-      fetchData();
-    }, []);
-    return (
-        
-        <div>
-            <UserTable employeeData={employeeData} setEmployeeData={setEmployeeData}/>
-            {/* <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
-                <h1 className="text-xl font-bold mb-4">Evaluation</h1>
-                <Evaluation />
-            </div> */}
-        </div>
-    )
+    setEmployeeData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  return (
+    <div className="flex flex-col space-y-4 p-4">
+      <UserTable
+        employeeData={employeeData}
+        setEmployeeData={setEmployeeData}
+      />
+      <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
+        <h1 className="text-xl font-bold mb-4">Evaluation</h1>
+        <Evaluation />
+      </div>
+    </div>
+  );
 }

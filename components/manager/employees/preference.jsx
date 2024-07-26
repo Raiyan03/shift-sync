@@ -1,5 +1,5 @@
 // import React, { useState } from 'react'
-import Shifts from "@/components/manager/employees/shift"
+import Shifts from "@/components/manager/employees/shifts"
 
 export default function Preferences() {
   

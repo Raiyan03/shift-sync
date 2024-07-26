@@ -17,20 +17,6 @@ import {
 // import { redirect, useRouter } from "next/navigation";
 // import { NextResponse } from "next/server";
 
-export async function addOrganization(orgName, managerName, emailAddr) {
-  await setDoc(doc(db, "Organizations", orgName), {
-    manager: managerName,
-    email: emailAddr,
-  });
-}
-
-// export async function addEmployee(organization, employee) {
-//   await setDoc(
-//     doc(db, `Organizations/${organization}/employees`, "employees"),
-//     { shifts: ["9 - 5", "5 - 12"] }
-//   );
-// }
-
 export async function getOrganization() {
   const colRef = query(collection(db, "Organizations"));
   const docSnap = await getDocs(colRef);

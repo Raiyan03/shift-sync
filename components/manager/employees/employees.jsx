@@ -4,13 +4,22 @@ import Link from 'next/link';
 import { getUser } from '@/action/actions';
 import { useState, useEffect } from 'react';
 import SearchBar from "@/components/manager/employees/search"
-import { deleteEmployee, getEmployeeData } from '@/lib/utilities';
+import { getEmployeeData } from '@/lib/utilities';
+
 import { redirect, useRouter } from 'next/navigation';
 import { IoEyeSharp } from "react-icons/io5";
 import { MdBuild, MdOutlineRemoveCircleOutline, MdPreview, MdViewCompact } from 'react-icons/md';
+import { deleteEmployeeFromDB } from '@/server/calls';
 const UserTable = ({ employeeData, setEmployeeData }) => {
     const [data, setData] = useState(employeeData);
     const {push} = useRouter()
+
+    const UpdateEmpList= async (id)=>{
+      var newArr = employeeData.employees.filter((val)=> val.id !== id)
+
+      setEmployeeData(newArr)
+    }
+
     return (
         <div className="mt-4 flex flex-col bg-secondary shadow-md border rounded-md p-4">
             <SearchBar placeholder="Search for user" employeeData={employeeData} setData={setData} location="users" />
@@ -28,7 +37,7 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                 </thead>
                 <tbody>
         {employeeData &&
-          employeeData?.employees.map((value, index) => {
+          employeeData?.employees?.map((value, index) => {
             return(
               <tr key={index} className="border-solid ">
                 <td className="p-2 ">{value.id}</td>
@@ -48,7 +57,7 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                         <IoEyeSharp size={30} />
                       </button>
                     </Link>
-                      <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployee(userData.id, value.id)}}>
+                      <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployeeFromDB(userData.id, value.id); await UpdateEmpList(value.id)}}>
                         <MdOutlineRemoveCircleOutline size={30}/>
                       </button>
                   </div>

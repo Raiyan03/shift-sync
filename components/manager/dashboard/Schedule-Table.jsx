@@ -6,7 +6,6 @@ import { getUser } from "@/action/actions";
 import {
   convertTimeStamps,
   filterShifts,
-  getScheduleData,
 } from "@/lib/utilities";
 import Table from "@/components/manager/dashboard/table";
 import { ClipLoader, MoonLoader } from "react-spinners";
@@ -16,6 +15,7 @@ import {
   getShiftDataFromDB,
   storeShiftToDB,
 } from "@/data/shift";
+import { getUserPreferencesForTheBackend } from "@/server/calls";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
   const [userId, setUserId] = useState();
@@ -35,7 +35,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     setUserId(currentUser?.id);
     const alreadyExistingData = await getShiftDataFromDB(currentUser?.id);
     if (alreadyExistingData !== null) {
-      const data = await getScheduleData(currentUser.id);
+      const data = await getUserPreferencesForTheBackend(currentUser.id);
 
       const shifts = filterShifts(alreadyExistingData);
       setSchedule(shifts);
@@ -51,7 +51,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     setLoading(true);
     const currentUser = await getUser();
 
-    const data = await getScheduleData(currentUser.id);
+    const data = await getUserPreferencesForTheBackend(currentUser.id);
     const res = await fetch("/api/schedule", {
       method: "POST",
       body: JSON.stringify(data),

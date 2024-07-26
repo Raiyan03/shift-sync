@@ -1,16 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getUser } from "@/action/actions";
-import { getEmployeeData } from "@/lib/utilities";
 import Evaluation from "@/components/manager/evaluation/evaluation";
 import UserTable from "@/components/manager/employees/employees";
+import { getEmployeesDataFromDB } from "@/server/calls";
 
 export default function Employees() {
     const [employeeData, setEmployeeData] = useState();
     
     const fetchData = async () => {
       const userData = await getUser();
-      const employees = await getEmployeeData(userData.id);
+      const employees = await getEmployeesDataFromDB(userData.id);
       console.log(employees);
       const data = {
         employees,

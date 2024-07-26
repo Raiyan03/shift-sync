@@ -2,6 +2,8 @@
 import { getScheduleData } from "@/app/lib/utilities";
 import React, { useEffect, useState } from "react";
 import { getUser } from "@/action/actions";
+import { newConvertTimeStamp } from "@/lib/utilities";
+import { getShiftData } from "@/data/shift";
 
 
 export default function Shifts({ day, setPreference }) {
@@ -61,7 +63,7 @@ export default function Shifts({ day, setPreference }) {
 
     if(user){
 
-      const scheduleData = await getScheduleData(user.id);
+      const scheduleData = await getShiftData(user.id);
       setSchedule(scheduleData);
     }
 
@@ -84,12 +86,13 @@ export default function Shifts({ day, setPreference }) {
         Select your shift preference
       </option>
       <option value="any">Any Shift</option>
+        {console.log(schedule)}
 
-      {schedule &&
-        schedule.shifts.map((value, index) => {
-          return <option value={`${day}-${index}`}>{timeStampConversion(value)}</option>;
-        })}
-        <option value="NA">Not Available</option>
+      {schedule? 
+        schedule.shifts?.map((value, index) => {
+          return <option value={`${day}-${index}`}>{newConvertTimeStamp(value)}</option>;
+        }): ""}
+        {/* <option value="NA">Not Available</option> */}
     </select>
   );
 }

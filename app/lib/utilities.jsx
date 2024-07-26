@@ -17,20 +17,6 @@ import {
 // import { redirect, useRouter } from "next/navigation";
 // import { NextResponse } from "next/server";
 
-export async function addOrganization(orgName, managerName, emailAddr) {
-  await setDoc(doc(db, "Organizations", orgName), {
-    manager: managerName,
-    email: emailAddr,
-  });
-}
-
-// export async function addEmployee(organization, employee) {
-//   await setDoc(
-//     doc(db, `Organizations/${organization}/employees`, "employees"),
-//     { shifts: ["9 - 5", "5 - 12"] }
-//   );
-// }
-
 export async function getOrganization() {
   const colRef = query(collection(db, "Organizations"));
   const docSnap = await getDocs(colRef);
@@ -84,11 +70,11 @@ export async function getScheduleData(organization) {
       };
 
       return data;
-    }else{
-      return {employees: []}
+    } else {
+      return { employees: [] };
     }
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 }
 
@@ -106,9 +92,7 @@ export function filterShifts(scheduleData) {
         shift: convertTimeStamp(shift.shift),
         requested: shift.requested,
       };
-
     });
-
   });
 
   const result = Object.keys(employees).map((employeeName) => {
@@ -119,10 +103,7 @@ export function filterShifts(scheduleData) {
     };
   });
 
-  return {result,
-    remaining_hours: scheduleData.remaining_hour_bank
-    
-  };
+  return { result, remaining_hours: scheduleData.remaining_hour_bank };
 }
 
 export function convertTimeStamp(data) {
@@ -264,7 +245,6 @@ export async function addingLeaderAndTeam(teamName, data) {
   }
 }
 
-
 // Legacy Code
 
 // export async function getUserFromDB(email, password) {
@@ -307,4 +287,30 @@ export const comparePass = async (rawPass, hashedPassword) => {
     return true;
   }
   return false;
+};
+
+export const updateShiftForUser = async (userId, data) => {
+  const userReference = collection(db, "Organizations");
+  const totalDataSnap = await getDocs(query(userReference));
+  if (!totalDataSnap.empty) {
+    for (const docData of totalDataSnap.docs) {
+      if (docData.data().id.includes(userId.slice(0, 4))) {
+        const employeeQ = collection(
+          db,
+          `Organizations/${docData.data().id}/employee`
+        );
+        const empDocs = await getDocs(
+          query(employeeQ),
+          where("Id", "==", userId)
+        );
+        if (!empDocs.empty) {
+          await setDoc(
+            doc(db, `Organizations/${docData.data().id}/employees`, id),
+            {data} , {merge: true}
+          );
+          return true;
+        }
+      }
+    }
+  }
 };

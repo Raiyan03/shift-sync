@@ -6,15 +6,19 @@ import { getUser } from "@/action/actions";
 import {
   convertTimeStamps,
   filterShifts,
-  getScheduleData,
 } from "@/lib/utilities";
 import Table from "@/components/manager/dashboard/table";
 import { ClipLoader, MoonLoader } from "react-spinners";
 import { useEffect, useState } from "react";
-import { deleteScheduleData, getShiftDataFromDB, storeShiftToDB } from "@/data/shift";
+import {
+  deleteScheduleData,
+  getShiftDataFromDB,
+  storeShiftToDB,
+} from "@/data/shift";
+import { getUserPreferencesForTheBackend } from "@/server/calls";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
-  const [userId, setUserId] = useState()
+  const [userId, setUserId] = useState();
   const [rawData, setRawData] = useState();
   const [shiftsData, setShiftsData] = useState();
 
@@ -22,16 +26,21 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     const user = await getUser();
     if (user) {
       await storeShiftToDB(user.id, shiftsData);
+      // console.log(shiftsData)
     }
   };
 
   const onLoadDataRender = async () => {
     const currentUser = await getUser();
-    setUserId(currentUser?.id)
+    setUserId(currentUser?.id);
     const alreadyExistingData = await getShiftDataFromDB(currentUser?.id);
     if (alreadyExistingData !== null) {
+      const data = await getUserPreferencesForTheBackend(currentUser.id);
+
       const shifts = filterShifts(alreadyExistingData);
       setSchedule(shifts);
+      setRawData(data)
+      setShiftsData(alreadyExistingData);
       setHoursRemaining(shifts.remaining_hours);
       setLoading(false);
     } else {
@@ -42,7 +51,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     setLoading(true);
     const currentUser = await getUser();
 
-    const data = await getScheduleData(currentUser.id);
+    const data = await getUserPreferencesForTheBackend(currentUser.id);
     const res = await fetch("/api/schedule", {
       method: "POST",
       body: JSON.stringify(data),
@@ -51,6 +60,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       },
     });
 
+    console.log(data)
     const scheduleData = await res.json();
     setRawData(data);
     const shifts = filterShifts(scheduleData);
@@ -60,10 +70,10 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     setLoading(false);
   };
 
-  const deleteSchedule = async()=>{
-    setSchedule(null)
-    await deleteScheduleData(userId)
-  }
+  const deleteSchedule = async () => {
+    setSchedule(null);
+    await deleteScheduleData(userId);
+  };
 
   useEffect(() => {
     onLoadDataRender();
@@ -73,7 +83,12 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     <div className=" flex flex-col bg-secondary border shadow-md rounded-lg p-4">
       <div className="flex flex-row justify-between mt-2">
         <h1 className="text-xl text-accent1 py-3">Schedule for this week</h1>
-        <button className="bg-primary text-white rounded-md p-2 w-30 flex h-10 items-center justify-center mr-10" onClick={deleteSchedule}>Delete Schedule</button>
+        <button
+          className="bg-primary text-white rounded-md p-2 w-30 flex h-10 items-center justify-center mr-10"
+          onClick={deleteSchedule}
+        >
+          Delete Schedule
+        </button>
       </div>
 
       <table className="w-full">
@@ -95,6 +110,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
             scheduleData={Schedule}
             options={rawData}
             shiftData={shiftsData}
+            setFinalData={setShiftsData}
           />
         </tbody>
       </table>

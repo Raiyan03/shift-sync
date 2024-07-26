@@ -6,6 +6,7 @@ import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase
 import { CredentialsSignin } from "next-auth"
 import { redirect } from "next/navigation"
 import { getSession } from "@/lib/getSession"
+import { updateUserDataInDB } from "@/data/user"
 
 const loginUser = async (formData: FormData) =>{
     const email = formData.get('email');
@@ -86,4 +87,38 @@ const getUser = async()=>{
     return user;
 }
 
-export {registerUser, loginUser, logOutUser, getUser}
+const updateUserData = async(formData: FormData)=>{
+    const {id, name, email, password, status, role} = Object.fromEntries(formData)
+    
+    try{
+        const updatedFields = {
+            email,
+            name, 
+            password, 
+            status, 
+            role
+        }
+        Object.keys(updatedFields).forEach((key)=>(updatedFields[key] === "" || undefined) && delete updatedFields[key])
+
+        if(updatedFields.password !== undefined || ""){
+            const hashedPassword = await saltAndHashPassword(updatedFields.password)
+
+            updatedFields.password = hashedPassword
+        }
+
+        if(updatedFields.status !== "undefined" || ""){
+            var statusUpdated : boolean
+            updatedFields.status == "Full Time"? statusUpdated = true : statusUpdated = false
+            updatedFields.status = statusUpdated
+        }
+
+        var response = await updateUserDataInDB(id, updatedFields)
+    }catch(err){
+        console.log(err)
+    }
+    if(response == true){
+        redirect("/manager/employees/")
+    }
+}
+
+export {registerUser, loginUser, logOutUser, getUser, updateUserData}

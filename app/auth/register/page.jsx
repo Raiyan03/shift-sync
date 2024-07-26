@@ -44,6 +44,7 @@ export default function RegisterPage() {
           name="password"
           className="p-2 border-2 border-primary rounded-lg bg-inherit text-black"
           placeholder="Password"
+          minLength={6}
           required
         />
         <button type="submit" className="bg-primary p-3 text-white rounded-lg">

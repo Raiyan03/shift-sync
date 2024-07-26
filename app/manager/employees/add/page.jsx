@@ -1,11 +1,10 @@
 "use client";
 import { getUser } from "@/action/actions";
 import {
-  getEmployeeData,
   saltAndHashPassword,
-  setEmployeeData,
 } from "@/app/lib/utilities";
-import Shifts from "@/app/ui/users/preferences/shifts/shifts";
+import Shifts from "@/components/manager/employees/shifts";
+import { setEmployeeDataForTheDB } from "@/server/calls";
 import { redirect, useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -32,14 +31,14 @@ export default function AddUser() {
   const addEmp = async (data) => {
     const userData = await getUser();
 
-    const ret = await setEmployeeData(userData.id, data, data.Id);
-    if (typeof ret != Boolean) {
+    const ret = await setEmployeeDataForTheDB(userData.id, data);
+    if (ret.status == false) {
       setError(true);
       setSuccess(false);
-      setErrorMsg(ret);
+      setErrorMsg(ret.message);
     //   push("/manager/employee");
     }
-    if (typeof ret == Boolean || ret == true) {
+    if (ret.status == true) {
       setError(false);
       setSuccess(true);
       push("/manager/employees");
@@ -53,7 +52,7 @@ export default function AddUser() {
 
     let realId = `${userData.id.slice(0, 4)}-${9}${id}`;
 
-    // realId = realId.replace(/\s+/g, '')
+    realId = realId.replace(/\s+/g, '')
 
     const splitMean = (string) => {
       if (string == "any") return string;

@@ -13,35 +13,8 @@ import {
   deleteDoc,
   query,
 } from "firebase/firestore";
-// import { redirect } from "next/navigation";
-// import { redirect, useRouter } from "next/navigation";
-// import { NextResponse } from "next/server";
 
-export async function addOrganization(orgName, managerName, emailAddr) {
-  await setDoc(doc(db, "Organizations", orgName), {
-    manager: managerName,
-    email: emailAddr,
-  });
-}
-
-// export async function addEmployee(organization, employee) {
-//   await setDoc(
-//     doc(db, `Organizations/${organization}/employees`, "employees"),
-//     { shifts: ["9 - 5", "5 - 12"] }
-//   );
-// }
-
-export async function getOrganization() {
-  const colRef = query(collection(db, "Organizations"));
-  const docSnap = await getDocs(colRef);
-  const orgs = [];
-  docSnap.forEach((doc) => {
-    const data = doc.data();
-    orgs.push(data);
-  });
-  return orgs;
-}
-
+//Done For the route
 export async function getScheduleData(organization) {
   let employees = [];
   const colRef = query(
@@ -172,13 +145,14 @@ export function convertTimeStamp(data) {
   return `${startformattedHours}:${startformattedMinutes} ${period} - ${endformattedHours}:${endformattedMinutes} ${period2}`;
 }
 
+
+//Done for api route
 export async function getEmployeeData(organization) {
   let employees = [];
   const colRef = query(
     collection(db, `Organizations/${organization}/employees`)
   );
   const docSnap = await getDocs(colRef);
-
   docSnap.forEach((doc) => {
     employees.push({
       name: doc.data().name,
@@ -188,14 +162,10 @@ export async function getEmployeeData(organization) {
       role: doc.data().role,
     });
   });
-
-  // const data = {
-  //   employees
-  // };
-
   return employees;
 }
 
+//Done
 export async function setEmployeeData(organization, employeeData, id) {
   const ItemRef = collection(db, `Organizations/${organization}/employees`);
   const q = query(ItemRef, where("email", "==", employeeData.email));
@@ -207,19 +177,16 @@ export async function setEmployeeData(organization, employeeData, id) {
         doc(db, `Organizations/${organization}/employees`, id),
         employeeData
       );
-      return true;
+      return {message: "User Added To DataBase", status: true};
     } else {
-      return "User Already Exists";
+      return {message: "User Already Exists", status: false};
     }
   } catch (err) {
     console.log(err);
   }
-
-  console.log(employeeData);
-  // const docRef = await addDoc(collection(db, `Organizations/${organization}/employees`), employeeData);
-
-  // console.log(docRef.id)
 }
+
+
 
 export async function deleteEmployee(organization, employeeId) {
   const itemsRef = collection(db, `Organizations/${organization}/employees`);
@@ -230,10 +197,10 @@ export async function deleteEmployee(organization, employeeId) {
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (document) => {
         await deleteDoc(document.ref);
-        console.log(`Document deleted successfully`);
+        return {message: "Document deleted successfully"};
       });
     } else {
-      console.log("No document matches the specified id.");
+      return {message: "No document matches the specified id."};
     }
   } catch (err) {
     console.error("Error deleting document by id:", err);
@@ -355,16 +322,42 @@ export const timeStampConversion = (data) => {
   return `${startformattedHours}:${startformattedMinutes} ${period} - ${endformattedHours}:${endformattedMinutes} ${period2}`;
 };
 
-export const stringToTime = (shift) => {
-  let [start, end] = shift.split("-");
+export const stringToTime = (timeString) => {
+  const [startTime, endTime] = timeString.split(' - ');
+  let [startHour, startMinute] = startTime.split(':');
+  let [endHour, endMinute] = endTime.split(':');
 
-  start = start.replace(/\s/g, "");
-  end = end.replace(/\s/g, "");
-
-  if (start.includes("AM")) {
-    const startTime = start.trim("AM");
-    console.log(startTime);
+  if (startTime.includes('AM') || startTime.includes('PM')) {
+    const startAmPm = startTime.includes('PM')? 'PM' : 'AM';
+    startHour = parseInt(startHour);
+    if (startAmPm === 'PM' && startHour!== 12) {
+      startHour += 12;
+    }
+  } else {
+    startHour = parseInt(startHour);
   }
+
+  if (endTime.includes('AM') || endTime.includes('PM')) {
+    const endAmPm = endTime.includes('PM')? 'PM' : 'AM';
+    endHour = parseInt(endHour);
+    if (endAmPm === 'PM' && endHour!== 12) {
+      endHour += 12;
+    }
+  } else {
+    endHour = parseInt(endHour);
+  }
+
+  const startDate = new Date();
+  startDate.setHours(startHour);
+  startDate.setMinutes(parseInt(startMinute));
+  startDate.setSeconds(0);
+
+  const endDate = new Date();
+  endDate.setHours(endHour);
+  endDate.setMinutes(parseInt(endMinute));
+  endDate.setSeconds(0);
+
+  return [startDate.getTime(), endDate.getTime()];
 };
 
 export function newConvertTimeStamp(data) {

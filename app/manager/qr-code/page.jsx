@@ -2,7 +2,6 @@
 
 import QrCodeComponent from './qr-code';
 import QrGenerate from './qr-generate';
-import scheduleData from '../../../components/manager/evaluation/scheduleData.json';
 
 export default function qrPage() {
   return (

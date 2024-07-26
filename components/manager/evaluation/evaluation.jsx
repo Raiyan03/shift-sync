@@ -153,7 +153,7 @@ export default function Evaluation({ scheduleData }) {
       {totalHours > 0 && (
         <div className="mt-4">
           <h2 >Employee Hours</h2>
-          <p>Employee: <span className="text-blue-500">{selectedDays}</span></p>
+          <p>Employee: <span className="text-blue-500"></span></p>
           <p>Total Hours: <span className="text-blue-500">{totalHours}</span></p>
         </div>
       )}

@@ -13,6 +13,8 @@ import {
   query,
 } from "firebase/firestore";
 
+
+//Done
 export async function getShiftData(userId: string) {
   const docQuery = doc(db, `Organizations`, userId);
 
@@ -102,11 +104,14 @@ export async function storeShiftToDB(collectionId: string, data: object) {
       remaining_hour_bank: data.remaining_hour_bank,
       total_hours_per_employee: data.total_hours_per_employee,
     });
+    return ({message: "Schedule Stored Successfully" , status: true})
   } catch (error) {
     throw new Error(error);
   }
 }
 
+
+//Done
 export async function getShiftDataFromDB(collectionId: string) {
   let data = {
     schedule: [],
@@ -206,8 +211,9 @@ export const deleteScheduleData = async (collectionId: string) => {
       querySnapshot.forEach(async (document) => {
         await deleteDoc(document.ref);
       });
+      return {message: "Deletion Successful", status: true}
     } else {
-      console.log("No document matches the specified id.");
+      return {message: "No document matches the specified id.", status: false}
     }
   } catch (error) {
     throw new Error(error);

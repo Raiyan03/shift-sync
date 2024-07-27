@@ -357,6 +357,10 @@ export const stringToTime = (timeString) => {
   endDate.setMinutes(parseInt(endMinute));
   endDate.setSeconds(0);
 
+  if(startDate > endDate){
+    endDate.setDate(endDate.getDate() +1)
+  }
+
   return [startDate.getTime(), endDate.getTime()];
 };
 

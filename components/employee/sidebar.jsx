@@ -15,11 +15,11 @@ const navbarItems = {
       path: "/manager/dashboard",
       icon: <MdDashboard />,
     },
-    {
-      title: "Employees",
-      path: "/manager/employees",
-      icon: <MdOutlineSupervisedUserCircle />,
-    },
+    // {
+    //   title: "Employees",
+    //   path: "/manager/employees",
+    //   icon: <MdOutlineSupervisedUserCircle />,
+    // },
     // {
     //   title: "Shift Swap",
     //   path: "/manager/shift-swap",

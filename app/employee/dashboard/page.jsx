@@ -1,8 +1,9 @@
 "use client"
 import { getUser, logOutUser } from "@/action/actions";
 import { getShiftDataForTheUser } from "@/data/shift";
+import { getUserData } from "@/data/user";
 import { useEffect, useState } from "react";
-
+import ShiftTable from "@/components/employee/shiftPref/shif-table";
 
 const Page = () => {
   // Contains personal employee information
@@ -11,21 +12,17 @@ const Page = () => {
   const [data, setData] = useState();
 
   const fetchScheduleData = async () => {
-    // Current best practice to store shifts
-    const shiftData = await getShiftDataForTheUser(userData?.id);
-    setData(shiftData);
-    console.log("Logging shift data imported: ");
-    console.log(shiftData);
-    console.log("logging shift data held: ");
-    console.log(data);
+
   };
 
   const fetch = async () => {
     const token = await getUser();
     if (token) {
+      console.log("Logging token: ", token);
       setUserData(token);
-      console.log(userData);
-      console.log("Got to fetch, userData is set");
+      const shiftData = await getShiftDataForTheUser(token?.id);
+      const pref = await getUserData(token?.id);
+      setData(shiftData);
     }
   };
 
@@ -34,8 +31,8 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex h-screen">
-      hello world
+    <div className="flex h-screen flex-col">
+      { data && <ShiftTable schedule={data} />}
     </div>
   );
 };

@@ -6,7 +6,7 @@ export default async function  Home() {
   const session = await auth();
   if (session !== null) {
     if (session?.user?.role === "employee") {
-      redirect("/employee");
+      redirect("/employee/dashboard");
     } else {
       redirect("/manager/dashboard");
   }

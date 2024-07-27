@@ -2,17 +2,7 @@
 import { getUser, logOutUser } from "@/action/actions";
 import { getShiftDataForTheUser } from "@/data/shift";
 import { useEffect, useState } from "react";
-import TimeStampComp from "./timestamper";
-import Sidebar from "./sidebar/sidebar.jsx";
 
-/*
-Things changed
-Added useEffect for hover over animations
-added sidebar
-moved user data and get schedule button to the profile sidebar
-added edit profile button
-added img src for the image (local images only, have to find a way for employee firestore image edits)
-*/
 
 const Page = () => {
   // Contains personal employee information

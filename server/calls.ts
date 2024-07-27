@@ -46,3 +46,4 @@ export async function deleteEmployeeFromDB(collectionId: string, userId: string)
         }
     })
 }
+

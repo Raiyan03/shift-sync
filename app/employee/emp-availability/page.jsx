@@ -3,7 +3,7 @@
 import { getUser, logOutUser } from "@/action/actions"
 import { getShiftData } from "@/data/shift"
 import TableRow from "./availability-row"
-import { convertTimeStamp } from "../../lib/utilities.jsx"
+import { convertTimeStamp, updateShiftForUser } from "../../lib/utilities.jsx"
 import { useEffect, useState } from "react"
 
 const page = () => {
@@ -11,6 +11,18 @@ const page = () => {
     const [userData, setUserData] = useState()
     const [shiftData, setShiftData] = useState()
 
+    //Placeholder preferences list
+    const newPreferences = {
+      fri: "0",
+      mon: "0",
+      sat: "0",
+      sun: "0",
+      thu: "0",
+      tue: "0",
+      wed: "0"
+    }
+
+    //Gathers user data for token, will use token later to capture shift data from org
     const fetch = async ()=>{
         const token = await getUser()
         if(token){
@@ -21,7 +33,15 @@ const page = () => {
         }
         
     }
-    
+
+    //Gathers shift data, includes
+    // - Shift timesets
+    // - Hour Bank
+    // - Flex hours
+    //We are only concerned with shift times here, however
+    //they are given in the form of string, when they need 
+    //to be in the form of an array of two strings.
+    //First, shift data is fetched and shifts are stored
     const fetchShiftData = async() => {
         const netData = await getShiftData(userData?.id)
         console.log("Raw awaited data: ")
@@ -36,70 +56,72 @@ const page = () => {
     useEffect(()=>{fetch()},[])
     
     //Constants
-    const days = Array(7)
-
+    
+    //Standard rows data
     const rowsData = [
-        { id: 0, day: 'Mon', selectedOption: '0' },
-        { id: 1, day: 'Tue', selectedOption: '0' },
-        { id: 2, day: 'Wed', selectedOption: '0' },
-        { id: 3, day: 'Thu', selectedOption: '0' },
-        { id: 4, day: 'Fri', selectedOption: '0' },
-        { id: 5, day: 'Sat', selectedOption: '0' },
-        { id: 6, day: 'Sun', selectedOption: '0' }
+        { id: 0, day: 'Mon', selectedOption: 'any' },
+        { id: 1, day: 'Tue', selectedOption: 'any' },
+        { id: 2, day: 'Wed', selectedOption: 'any' },
+        { id: 3, day: 'Thu', selectedOption: 'any' },
+        { id: 4, day: 'Fri', selectedOption: 'any' },
+        { id: 5, day: 'Sat', selectedOption: 'any' },
+        { id: 6, day: 'Sun', selectedOption: 'any' }
     ]
 
     //Each available shift, converted from {unixStart, unixEnd} to a simple Timestamp
     const availableShiftOptions = []
     //Each timestamp shift, now held instead as {dayInt, timestamp}
-    //const options = []
+    const options = []
 
-    //For each UNIX set of shifts, convert to timestamp
+    //For each UNIX set of shifts in one string, convert
+    //first to array, then to timestamp
     //Store each in a list of actual times
     shiftData?.forEach((shift) => {
-        availableShiftOptions.push(convertTimeStamp(shift))
-        console.log("Shift pushed to options: ")
-        console.log(shift)
-        console.log(convertTimeStamp(shift))
+      const splicer = [];
+      splicer.push(shift.substring(1,13))
+      //console.log("Substring of shift 1-13")
+      //console.log(shift.substring(1,13))
+      splicer.push(shift.substring(15,shift.length))
+      //console.log("Substring of shift 15-length")
+      //console.log(shift.substring(15,shift.length))
+      availableShiftOptions.push(convertTimeStamp(splicer))
+      //console.log("Shift pushed to options: ")
+      //console.log(convertTimeStamp(splicer))
     })
     
-    /*
-    for (const shift in shiftData) {
-        console.log("Individual shift:")
-        console.log(shift)
-    }
-    */
-
+   
     //Log for validation
-    console.log("Full list of shifts in timestamp form: ")
-    console.log(availableShiftOptions)
+    //console.log("Full list of shifts in timestamp form: ")
+    //console.log(availableShiftOptions)
     
     //For each stored timestamp, turn into option for selector
     //Value should be the 'int' corresponding to shift chosen
     //Label will be actual timestamp
     //Store each in list of options
     //Each "shift" object is NOT the requested array, but instead a string, so conversion is needed
-    /*
+    
+    //Adding in the 'any' option
+    options.push({value: "any", label: "Any"})   
     let counter = 0
     availableShiftOptions.forEach((convertedShift) => {
-        const newVal = {value: "shift" + counter, label: convertedShift}
+        const newVal = {value: counter, label: convertedShift}
         counter++
         options.push(newVal)
         console.log("New option pushed to options: ")
         console.log(newVal)
     })
-        
-    */
-   const options = [
-    {value: "0", label: "08:00AM - 01:00PM"},
-    {value: "1", label: "11:00PM - 03:00PM"},
-    {value: "2", label: "01:00PM - 05:00PM"}
-   ]
-   
-   
+    
 
+   //Row calculations
     const [rows, setRows] = useState(rowsData);
-
+    
+    //Updating preferences (selection changes)
     const handleSelectChange = (id, selectedValue) => {
+      console.log("Select changed, ID and Value: ")
+      console.log(id)
+      console.log(selectedValue)
+      
+      //Convoluted shift swapper, changing row value
       const updatedRows = rows.map(row => {
         if (row.id === id) {
           return { ...row, selectedOption: selectedValue };
@@ -107,8 +129,23 @@ const page = () => {
         return row;
       });
       setRows(updatedRows);
+      console.log(rows)
     };
 
+    //"Submit" button actions
+    const sendNewPreferences = () => {
+      newPreferences.mon = rows[0].selectedOption
+      newPreferences.tue = rows[1].selectedOption
+      newPreferences.wed = rows[2].selectedOption
+      newPreferences.thu = rows [3].selectedOption
+      newPreferences.fri = rows[4].selectedOption
+      newPreferences.sat = rows[5].selectedOption
+      newPreferences.sun = rows[6].selectedOption
+      console.log("New preferences: ")
+      console.log(newPreferences)
+      alert("New preferences have been submitted!")
+      updateShiftForUser(userData?.id, newPreferences)
+    }
     //Page render
     //
     //Includes temporary button to remove shift information retrieval
@@ -139,6 +176,7 @@ const page = () => {
                 ))}
             </tbody>
             </table>
+            <button onClick={sendNewPreferences}>Submit preferences</button>
         </div>
     )
 

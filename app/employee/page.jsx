@@ -45,46 +45,7 @@ const Page = () => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
-      <Sidebar userData={userData} />
-      <div className="w-1/4 bg-gray-200 p-4 flex flex-col items-center">
-        <div className="">
-          <img src="/images/placeholder.png" alt="Profile" className="bg-gray-400 rounded-full w-24 h-24 mb-4 object-cover" />
-        </div>
-        <p className="text-center mb-2">Profile name: {userData?.name}</p>
-        <p className="text-center mb-2">Employee ID: {userData?.id}</p>
-        <p className="text-center mb-4">Employee status: {userData?.role}</p>
-        <button className="bg-yellow-400 w-3/4 py-2 mb-2 rounded transform transition-transform duration-300 hover:bg-yellow-500 hover:scale-110" type="submit">Edit Profile</button>
-        {userData && (
-          <button className="bg-green-500 text-white py-2 px-4 rounded mb-4 transform transition-transform duration-300 hover:bg-green-600 hover:scale-110" onClick={fetchScheduleData}>
-            Get Schedule Data
-          </button>
-        )}
-      </div>
-      <div className="w-3/4 bg-white p-4 overflow-x-auto">
-        <div>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b">
-                <th className="p-2 text-left">Shift Day</th>
-                <th className="p-2 text-left">Shift Time</th>
-                <th className="p-2 text-left">Shift Length</th>
-                <th className="p-2 text-left">Request Approval</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data && data.map((value, index) => (
-                <tr key={index} className="border-b bg-gray-300">
-                  <td className="p-2">{value.day}</td>
-                  <TimeStampComp shiftStamp={value.shift.shift} className="p-2" />
-                  <td className="p-2">{value.shift.hours}</td>
-                  <td className="p-2">{value.shift.requested.toString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      hello world
     </div>
   );
 };

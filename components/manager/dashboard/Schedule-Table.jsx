@@ -3,43 +3,41 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getUser } from "@/action/actions";
-import {
-  convertTimeStamps,
-  filterShifts,
-} from "@/lib/utilities";
+import { convertTimeStamps, filterShifts } from "@/lib/utilities";
 import Table from "@/components/manager/dashboard/table";
 import { ClipLoader, MoonLoader } from "react-spinners";
 import { useEffect, useState } from "react";
-import {
-  deleteScheduleData,
-  getShiftDataFromDB,
-  storeShiftToDB,
-} from "@/data/shift";
-import { getUserPreferencesForTheBackend } from "@/server/calls";
+import { deleteGeneratedScheduleFromDB, getStoredScheduleDataFromDB, getUserPreferencesForTheBackend, storeGeneratedScheduleToDB } from "@/server/calls";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
   const [userId, setUserId] = useState();
   const [rawData, setRawData] = useState();
   const [shiftsData, setShiftsData] = useState();
+  const [message, setMessage] = useState();
 
   const publishSchedule = async () => {
     const user = await getUser();
     if (user) {
-      await storeShiftToDB(user.id, shiftsData);
-      // console.log(shiftsData)
+      const response = await storeGeneratedScheduleToDB(user.id, shiftsData);
+      if(response?.status == true){
+        setMessage({ status: true, text: response?.message });
+        setTimeout(() => {
+          setMessage(null);
+        }, 3000);
+      }
     }
   };
 
   const onLoadDataRender = async () => {
     const currentUser = await getUser();
     setUserId(currentUser?.id);
-    const alreadyExistingData = await getShiftDataFromDB(currentUser?.id);
+    const alreadyExistingData = await getStoredScheduleDataFromDB(currentUser?.id);
     if (alreadyExistingData !== null) {
       const data = await getUserPreferencesForTheBackend(currentUser.id);
 
       const shifts = filterShifts(alreadyExistingData);
       setSchedule(shifts);
-      setRawData(data)
+      setRawData(data);
       setShiftsData(alreadyExistingData);
       setHoursRemaining(shifts.remaining_hours);
       setLoading(false);
@@ -59,8 +57,6 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         "Content-Type": "application/json",
       },
     });
-
-    console.log(data)
     const scheduleData = await res.json();
     setRawData(data);
     const shifts = filterShifts(scheduleData);
@@ -71,8 +67,19 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   };
 
   const deleteSchedule = async () => {
-    setSchedule(null);
-    await deleteScheduleData(userId);
+    const response = await deleteGeneratedScheduleFromDB(userId);
+    if (response?.status == true) {
+      setMessage({ status: true, text: response?.message });
+      setTimeout(() => {
+        setMessage(null);
+      }, 1500);
+      setSchedule(null);
+    } else if (response?.status == false) {
+      setMessage({ status: true, text: response?.message });
+      setTimeout(() => {
+        setMessage(null);
+      }, 1500);
+    }
   };
 
   useEffect(() => {
@@ -83,6 +90,14 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     <div className=" flex flex-col bg-secondary border shadow-md rounded-lg p-4">
       <div className="flex flex-row justify-between mt-2">
         <h1 className="text-xl text-accent1 py-3">Schedule for this week</h1>
+        <div
+          className={`rounded-3xl px-4 h-10 flex justify-center items-center align-middle font-bold mr-36 transition-all duration-1000 delay-150 ease-linear ${
+            message?.status ? "visible scale-100" : "invisible"
+          } `}
+        >
+          {message?.text}
+        </div>
+
         <button
           className="bg-primary text-white rounded-md p-2 w-30 flex h-10 items-center justify-center mr-10"
           onClick={deleteSchedule}
@@ -136,6 +151,13 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   ) : (
     <div className="flex p-3 items-center justify-between bg-secondary border shadow-md rounded-md">
       <h1>There is no schedule for this week!</h1>
+      <div
+        className={`rounded-3xl px-4 h-10 flex justify-center items-center align-middle font-bold mr-36 transition-all duration-700 delay-150 ease-linear ${
+          message?.status ? "visible scale-100" : "invisible"
+        } `}
+      >
+        {message?.text}
+      </div>
       <button
         className={`bg-primary ${
           Loading ? "disabled" : null
@@ -144,7 +166,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       >
         {Loading ? (
           <div>
-            <ClipLoader size={20} color="white" an />
+            <ClipLoader size={20} color="white" />
           </div>
         ) : (
           "Generate"

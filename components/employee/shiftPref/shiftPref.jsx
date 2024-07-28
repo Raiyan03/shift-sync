@@ -1,11 +1,10 @@
 "use client";
-import { getUser } from "@/action/actions";
-import { getShiftData, getShiftDataForTheUser } from "@/data/shift";
-import { convertTimeStamp, newConvertTimeStamp, timeStampConversion, updateShiftForUser } from "@/lib/utilities";
-import { use, useEffect, useState } from "react";
-import Shift from "@/components/employee/shiftPref/shift"
+import { getShiftData } from "@/data/shift";
+import { useEffect, useState } from "react";
 import DayCard from "@/components/employee/shiftPref/daycard"
 import { getUserData } from "@/data/user";
+import { filterPrefValue } from "@/lib/employeeHelper";
+import { updateShiftForUser } from "@/lib/utilities";
 
 const daysOfWeek = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']; 
 
@@ -25,12 +24,18 @@ const EmployeePreferences = ({id}) => {
     }, []);
 
     const handlePreferenceChange = (day, value) => {
-        setPreferences(prev => ({ ...prev, [day]: value }));
-        console.log(value);
+        const newValue = filterPrefValue(value, shiftList);
+        setPreferences(prev => ({ ...prev, [day]: newValue }));
     };
 
-    const handleSubmit = () => {
-        console.log('Submitted Preferences:', preferences);
+    const handleSubmit = async () => {
+        console.log("Submitting preferences");
+        console.log(preferences);
+        if (!id || !preferences) {
+            return;
+        }
+        await updateShiftForUser(id, preferences);
+        console.log("Preferences submitted");
     };
     return (
         shiftList 

@@ -4,7 +4,7 @@ import { getShiftDataForTheUser } from "@/data/shift";
 import { getUserData } from "@/data/user";
 import { useEffect, useState } from "react";
 import ShiftTable from "@/components/employee/shiftPref/shif-table";
-
+import ShiftPref from "@/components/employee/shiftPref/shiftPref"
 const Page = () => {
   // Contains personal employee information
   const [userData, setUserData] = useState();
@@ -31,8 +31,9 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex min-h-screen flex-col gap-3">
       { data && <ShiftTable schedule={data} />}
+      { userData && <ShiftPref id={userData?.id} />}
     </div>
   );
 };

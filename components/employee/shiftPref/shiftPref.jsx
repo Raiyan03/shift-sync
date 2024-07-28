@@ -26,16 +26,19 @@ const EmployeePreferences = ({id}) => {
 
     const handlePreferenceChange = (day, value) => {
         setPreferences(prev => ({ ...prev, [day]: value }));
+        console.log(value);
     };
 
     const handleSubmit = () => {
         console.log('Submitted Preferences:', preferences);
     };
     return (
+        shiftList 
+        && 
         <div className=" border rounded-lg p-2">
             <div className="flex flex-wrap  md:justify-center ">
                 { daysOfWeek.map(day => (
-                    <DayCard key={day} day={day} preferences={preferences} />
+                    <DayCard key={day} day={day} preferences={preferences} shiftList={shiftList} handlePreferenceChange={handlePreferenceChange} />
                 ))}
             </div>
             <button

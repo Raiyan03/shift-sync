@@ -20,6 +20,12 @@ export async function getEmployeesDataFromDB(collectionId: string){
     return data
 }
 
+export async function deleteGeneratedScheduleFromDB(collectionId: string){
+    const response = await fetch(`/api/deleteScheduleData/${collectionId}`)
+    const data = await response.json()
+    return data
+}
+
 export async function setEmployeeDataForTheDB(collectionId: string, userData: any){
     const response = await fetch(`/api/setEmployeeData`, {
         method: "POST",
@@ -45,4 +51,24 @@ export async function deleteEmployeeFromDB(collectionId: string, userId: string)
             "Content-type": "application/json",
         }
     })
+}
+
+export async function storeGeneratedScheduleToDB(userId: string, scheduleData: any){
+    const response = await fetch(`/api/setGeneratedScheduleDataToDB`, {
+        method: "POST",
+        body: JSON.stringify({
+            userId: userId,
+            data: scheduleData
+        }),
+        headers: {
+            "Content-type": "application/json",
+        }
+    })
+    return response.json()
+}
+
+export async function getStoredScheduleDataFromDB(collectionId: string){
+    const response = await fetch(`/api/getStoredScheduleFromDB/${collectionId}`)
+    const data = await response.json()
+    return data
 }

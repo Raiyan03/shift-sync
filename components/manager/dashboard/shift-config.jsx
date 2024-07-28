@@ -1,9 +1,9 @@
 "use client";
 import { getUser } from "@/action/actions";
 import { updateShifts } from "@/lib/utilities";
-import { getShiftData, getUserData } from "@/data/shift";
 import React, { useEffect, useState } from "react";
 import { MdApps } from "react-icons/md";
+import { getShiftDataFromDB } from "@/server/calls";
 
 function ShiftConfig({ id }) {
   const [shifts, setShifts] = useState([{ shiftStart: "", shiftClose: "" }]);
@@ -20,7 +20,7 @@ function ShiftConfig({ id }) {
   const getAndLogShiftData = async () => {
     const user = await getUser();
     if (user !== undefined) {
-      const shiftData = await getShiftData(user.id);
+      const shiftData = await getShiftDataFromDB(user.id);
       let newShift = [...shifts];
       if (shiftData != null || shiftData != undefined) {
         setHoursOfOperation(shiftData.hour_bank);
@@ -110,23 +110,21 @@ function ShiftConfig({ id }) {
       );
     });
 
-    var [s,e] = finalArray[shifts.length - 1].split(",")
+    finalArray.map((val,x)=>{
+      var [s,e] = val.split(",")
 
-    var againstT = new Date(parseInt(e))
-    var againstY = new Date(parseInt(s))
-    const timeNow = new Date();
+      const againstS = new Date(parseInt(s))
+      const againstE = new Date(parseInt(e))
 
-    // if(againstY.getHours() < timeNow.getHours()){
-    //   againstY.setDate(againstY.getDate()+1)
-    //   s = againstY.valueOf()
-    //   finalArray[shifts.length - 1] = `${s},${e}`
-    // }
+      if(s>e){
+        againstE.setDate(againstE.getDate() +1 )
+        e = againstE.valueOf()
+        val = `${s},${e}`
+        finalArray[x] = `${s},${e}`
+      }
 
-    if(againstT.getHours() < timeNow.getHours()){
-      againstT.setDate(againstT.getDate()+1)
-      e = againstT.valueOf()
-      finalArray[shifts.length - 1] = `${s},${e}`
-    }
+    })
+
 
     const resp = await updateShifts(
       id,

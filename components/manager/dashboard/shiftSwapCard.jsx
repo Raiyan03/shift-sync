@@ -11,16 +11,18 @@ function ShiftSwapCard({
   shiftData,
   empName,
   setFinalData,
+  totalHours,
+  setTotalHours
 }) {
   const [requested, setRequested] = useState();
   const [rawData, setRawData] = useState();
   const [shiftTemp, setShiftTemp] = useState();
-  const [totalHours, setTotalHours] = useState();
 
   useEffect(() => {
     setRequested(required);
     setRawData(scheduleData);
   }, []);
+
   const changingShift = (e) => {
     setRequested(false);
     setShiftTemp(e);
@@ -56,8 +58,12 @@ function ShiftSwapCard({
         newShiftData.schedule[day].shifts.find(
           (shift) => shift.id == id
         ).custom = true;
+        newShiftData.schedule[day].shifts.find(
+          (shift) => shift.id == id
+        ).hours = hours;
         setFinalData(newShiftData);
       }
+
     }else{
       if(foundShift !== undefined){
         const newShiftData = shiftData;

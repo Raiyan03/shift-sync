@@ -1,27 +1,16 @@
 "use client"
 import { getUser } from "@/action/actions";
-import { getScheduleData } from "@/lib/utilities";
 import { useState, useEffect } from "react";
 import TableData from "@/components/manager/availability/table-data";
+import { getUserPreferencesForTheBackend } from "@/server/calls";
 export default function Table() {
     const [schedule, setSchedule] = useState();
 
     const fetchAndLogData = async () => {
-      // const res = await fetch("api/getPreference");
-      // if (!res.ok) {
-      //   throw new Error("HTTP error");
-      // }
-  
-      // const scheduleData = await res.json();
       const userData = await getUser();
-      const temp = userData.id
-      console.log(temp)
-      const scheduleData = await getScheduleData(temp);
-  
-      if(scheduleData !== null){
-        setSchedule(scheduleData);
-      }
-  
+      const userId = userData.id
+      const scheduleData = await getUserPreferencesForTheBackend(userId);
+      scheduleData !== null? setSchedule(scheduleData) : ""
     };
   
     useEffect(() => {

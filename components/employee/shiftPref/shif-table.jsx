@@ -1,7 +1,6 @@
 import { getDayName, formatTime} from "@/lib/employeeHelper"
 
 const ShiftTable = ({ schedule }) => {
-    console.log(schedule)
     return (
       <div className="bg-secondary p-2 border rounded-lg">
         <h1 className="text-xl text-accent1">Schedule</h1>

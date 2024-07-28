@@ -11,14 +11,9 @@ const Page = () => {
   // Contains shift and schedule information for employee
   const [data, setData] = useState();
 
-  const fetchScheduleData = async () => {
-
-  };
-
   const fetch = async () => {
     const token = await getUser();
     if (token) {
-      console.log("Logging token: ", token);
       setUserData(token);
       const shiftData = await getShiftDataForTheUser(token?.id);
       const pref = await getUserData(token?.id);

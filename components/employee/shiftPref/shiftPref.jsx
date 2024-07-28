@@ -11,6 +11,19 @@ const daysOfWeek = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 const EmployeePreferences = ({id}) => {
     const [preferences, setPreferences] = useState();
+    const [shiftList, setShifts] = useState();
+    useEffect(() => {
+        (async () => {
+            if (!id){
+                return ;
+            }
+            const shifts = await getShiftData(id);
+            const pref = await getUserData(id);
+            setShifts(shifts?.shifts);
+            setPreferences(pref?.shiftPref);
+        })();
+    }, []);
+
     const handlePreferenceChange = (day, value) => {
         setPreferences(prev => ({ ...prev, [day]: value }));
     };
@@ -18,7 +31,6 @@ const EmployeePreferences = ({id}) => {
     const handleSubmit = () => {
         console.log('Submitted Preferences:', preferences);
     };
-    console.log("Preferences: ", preferences);
     return (
         <div className=" border rounded-lg p-2">
             <div className="flex flex-wrap  md:justify-center ">

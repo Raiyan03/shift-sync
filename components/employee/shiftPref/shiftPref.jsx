@@ -1,80 +1,75 @@
 "use client";
-import { getUser } from "@/action/actions";
-import { getShiftData, getShiftDataForTheUser } from "@/data/shift";
-import { convertTimeStamp, newConvertTimeStamp, timeStampConversion, updateShiftForUser } from "@/lib/utilities";
-import { use, useEffect, useState } from "react";
-import Shift from "@/components/employee/shiftPref/shift"
+import { getShiftData } from "@/data/shift";
+import { useEffect, useState } from "react";
+import DayCard from "@/components/employee/shiftPref/daycard"
+import { getUserData } from "@/data/user";
+import { filterPrefValue } from "@/lib/employeeHelper";
+import { updateShiftForUser } from "@/lib/utilities";
+import { toast } from "sonner";
 
-function ShiftPref() {
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const [mon, setMon] = useState("any");
-  const [tue, setTue] = useState("any");
-  const [thu, setThu] = useState("any");
-  const [wed, setWed] = useState("any");
-  const [fri, setFri] = useState("any");
-  const [sat, setSat] = useState("any");
-  const [sun, setSun] = useState("any");
-  const [userData, setUserData] = useState();
-  const [shiftData, setShiftData] = useState();
-  const [scheduleData, setScheduleData] = useState();
+const daysOfWeek = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']; 
 
-  const updateShift = async (data) => {
-    const ret = await updateShiftForUser(userData?.id, data);
-    // console.log(data)
-  };
+const EmployeePreferences = ({id}) => {
+    const [preferences, setPreferences] = useState();
+    const [shiftList, setShifts] = useState();
+    useEffect(() => {
+        (async () => {
+            if (!id){
+                return ;
+            }
+            const shifts = await getShiftData(id);
+            const pref = await getUserData(id);
+            setShifts(shifts?.shifts);
+            setPreferences(pref?.shiftPref);
+        })();
+    }, []);
 
-
-  const handleSubmit = async (e)=>{
-    e.preventDefault();
-    const splitMean = (string) => {
-      if (string == "any") return string;
-      const myArray = string.split("-");
-      const shiftArray = myArray[1];
-      return shiftArray;
+    const handlePreferenceChange = (day, value) => {
+        const newValue = filterPrefValue(value, shiftList);
+        setPreferences(prev => ({ ...prev, [day]: newValue }));
     };
 
-    const data = {
-      mon: splitMean(mon),
-      tue: splitMean(tue),
-      wed: splitMean(wed),
-      thu: splitMean(thu),
-      fri: splitMean(fri),
-      sat: splitMean(sat),
-      sun: splitMean(sun),
+    const handleSubmit = async () => {
+        if (!id || !preferences) {
+            return;
+        }
+
+        /*
+        * This is a toast.promise function that is used to display a loading Link: https://sonner.emilkowal.ski/
+        * toast.promise is a function that takes a promise and an object containing
+        * three functions: loading, success, and error. The loading function is called
+        * when the promise is pending, the success function is called when the promise
+        * resolves, and the error function is called when the promise rejects.
+        */
+
+        toast.promise( updateShiftForUser(id, preferences),{
+            loading: "Updating preferences...",
+            success: () => {
+                return 'Preferences updated';
+            },
+            error: (err) => {
+                return "Someting went wrong";
+            }
+        })
     };
-    updateShift(data)
-  }
-
-  const fetch = async () => {
-    const token = await getUser();
-    if (token) {
-      setUserData(token);
-    }
-    const data = await getShiftData(token.id);
-    setShiftData(data);
-  };
-
-  useEffect(() => {
-    fetch();
-  }, []);
-  return (
-    <div>
-      <form onSubmit={handleSubmit} className="flex flex-col">
-      {days.map((day, index) => (
-            <div key={index} className="flex flex-col">
-              <label className="text-lg font-semibold m-2">{day}</label>
-              <Shift shiftData={shiftData} day={day} setPreference={eval(`set${day}`)} />
+    return (
+        shiftList 
+        && 
+        <div className=" flex flex-col border rounded-lg p-2">
+            <h1 className="text-xl text-accent1">Shift Preferences</h1>
+            <div className="flex flex-wrap  md:justify-center ">
+                { daysOfWeek.map(day => (
+                    <DayCard key={day} day={day} preferences={preferences} shiftList={shiftList} handlePreferenceChange={handlePreferenceChange} />
+                ))}
             </div>
-          ))}
-      <button
-          type="submit"
-          className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full sm:w-auto m-4 w-3"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
-  );
-}
+            <button
+                className=" self-end w-fit bg-primary hover:bg-slate-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={handleSubmit}
+            >
+                Update Preferences
+            </button>
+        </div>
+    );
+};
 
-export default ShiftPref;
+export default EmployeePreferences;

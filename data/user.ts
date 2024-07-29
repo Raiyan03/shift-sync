@@ -184,8 +184,17 @@ export async function getUserData(userId: string) {
               name: userSnap?.data()?.name,
               email: userSnap?.data()?.email,
               role: userSnap?.data()?.role,
-              status: (userSnap?.data()?.status? "Full Time" : "Part Time"),
-            }
+              status: userSnap?.data()?.status ? "full time" : "part time",
+              shiftPref: {
+                mon: userSnap?.data()?.mon,
+                tue: userSnap?.data()?.tue,
+                wed: userSnap?.data()?.wed,
+                thu: userSnap?.data()?.thu,
+                fri: userSnap?.data()?.fri,
+                sat: userSnap?.data()?.sat,
+                sun: userSnap?.data()?.sun,
+              },
+            };
           }
         }
       }

@@ -6,9 +6,7 @@ const TimeStampComp = ({ shiftStamp }) => {
     const fullStamp = convertTimeStamp(shiftStamp);
 
     return (
-
-        <td>{fullStamp}</td>
-
+        <td className="p-2">{fullStamp}</td>
     )
 }
 

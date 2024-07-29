@@ -22,6 +22,6 @@ export const employeeRoutes = "/employee"
 
 export const managerRoutes = "/manager"
 
-export const DEFAULT_EMPLOYEE_ROUTE = "/employee"
+export const DEFAULT_EMPLOYEE_ROUTE = "/employee/dashboard"
 
 export const DEFAULT_MANAGER_ROUTE = "/manager/dashboard"

@@ -7,7 +7,7 @@ import { getEmployeesDataFromDB } from "@/server/calls";
 
 export default function Employees() {
     const [employeeData, setEmployeeData] = useState();
-    
+    const [loading, setLoading] = useState(true);
     const fetchData = async () => {
       const userData = await getUser();
       const employees = await getEmployeesDataFromDB(userData.id);
@@ -15,7 +15,7 @@ export default function Employees() {
       const data = {
         employees,
       };
-  
+      setLoading(false);
       setEmployeeData(data);
     };
   
@@ -25,7 +25,7 @@ export default function Employees() {
     
     return (
         <div className="flex flex-col space-y-4 p-4">
-            <UserTable employeeData={employeeData} setEmployeeData={setEmployeeData} />
+            <UserTable employeeData={employeeData} setEmployeeData={setEmployeeData} Loading={loading} />
             <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
                 <h1 className="text-xl font-bold mb-4">Evaluation</h1>
                 <Evaluation />

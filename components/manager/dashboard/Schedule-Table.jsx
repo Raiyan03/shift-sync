@@ -28,10 +28,8 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         error: (err) => {
             return "Someting went wrong";
         },
-        finally: () => {
-          setScheduleExists(true);
-        }
     })
+    setScheduleExists(true);
     }
   };
 
@@ -50,6 +48,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       setScheduleExists(true);
       setLoading(false);
     } else {
+      setScheduleExists(false);
     }
   };
 
@@ -91,6 +90,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       error: (err) => {
           return "Something went wrong";
       },
+      duration: 800
   })
     setSchedule(null);
     setScheduleExists(false);

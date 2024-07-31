@@ -5,12 +5,12 @@ import { getUser } from '@/action/actions';
 import { useState, useEffect } from 'react';
 import SearchBar from "@/components/manager/employees/search"
 import { getEmployeeData } from '@/lib/utilities';
-
+import Loader from '@/components/loader';
 import { redirect, useRouter } from 'next/navigation';
 import { IoEyeSharp } from "react-icons/io5";
 import { MdBuild, MdOutlineRemoveCircleOutline, MdPreview, MdViewCompact } from 'react-icons/md';
 import { deleteEmployeeFromDB } from '@/server/calls';
-const UserTable = ({ employeeData, setEmployeeData }) => {
+const UserTable = ({ employeeData, setEmployeeData, Loading }) => {
     const [data, setData] = useState(employeeData);
     const {push} = useRouter()
 
@@ -21,7 +21,14 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
     }
 
     return (
-        <div className="mt-4 flex flex-col bg-secondary shadow-md border rounded-md p-4">
+      Loading ? 
+      <div className='flex shadow-md border rounded-md h-60 items-center justify-center'>
+        <Loader />
+      </div> 
+
+      :
+
+      <div className="mt-4 flex flex-col bg-secondary shadow-md border rounded-md p-4">
             <SearchBar placeholder="Search for user" employeeData={employeeData} setData={setData} location="users" />
             <table className="w-full">
                 <thead>

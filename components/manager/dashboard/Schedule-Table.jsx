@@ -27,6 +27,9 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         },
         error: (err) => {
             return "Someting went wrong";
+        },
+        finally: () => {
+          setScheduleExists(true);
         }
     })
     }
@@ -74,22 +77,23 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const deleteSchedule = async () => {
     if (!scheduleExists) {
       setSchedule(null);
-      toast.success("Schedule deleted!");
+      toast.success("Schedule deleted!", {
+        duration: 800,
+      });
       return;
     }
-    const response = await deleteGeneratedScheduleFromDB(userId);
-    if (response?.status == true) {
-      setMessage({ status: true, text: response?.message });
-      setTimeout(() => {
-        setMessage(null);
-      }, 1500);
-      setSchedule(null);
-    } else if (response?.status == false) {
-      setMessage({ status: true, text: response?.message });
-      setTimeout(() => {
-        setMessage(null);
-      }, 1500);
-    }
+
+    toast.promise( deleteGeneratedScheduleFromDB(userId),{
+      loading: "Deleting shceule...",
+      success: () => {
+          return 'Schedule deleted!';
+      },
+      error: (err) => {
+          return "Something went wrong";
+      },
+  })
+    setSchedule(null);
+    setScheduleExists(false);
   };
 
   useEffect(() => {

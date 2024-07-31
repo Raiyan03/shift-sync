@@ -24,7 +24,7 @@ export default function Employees() {
     }, []);
     
     return (
-        <div className="flex flex-col space-y-4 p-4">
+        <div className="flex flex-col ">
             <UserTable employeeData={employeeData} setEmployeeData={setEmployeeData} Loading={loading} />
             <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
                 <h1 className="text-xl font-bold mb-4">Evaluation</h1>

@@ -28,7 +28,7 @@ const UserTable = ({ employeeData, setEmployeeData, Loading }) => {
 
       :
 
-      <div className="mt-4 flex flex-col bg-secondary shadow-md border rounded-md p-4">
+      <div className=" flex flex-col bg-secondary shadow-md border rounded-md p-4">
             <SearchBar placeholder="Search for user" employeeData={employeeData} setData={setData} location="users" />
             <table className="w-full">
                 <thead>

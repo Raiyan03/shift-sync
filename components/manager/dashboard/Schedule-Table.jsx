@@ -8,6 +8,7 @@ import Table from "@/components/manager/dashboard/table";
 import { ClipLoader, MoonLoader } from "react-spinners";
 import { useEffect, useState } from "react";
 import { deleteGeneratedScheduleFromDB, getStoredScheduleDataFromDB, getUserPreferencesForTheBackend, storeGeneratedScheduleToDB } from "@/server/calls";
+import { toast } from "sonner";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
   const [userId, setUserId] = useState();
@@ -18,13 +19,15 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const publishSchedule = async () => {
     const user = await getUser();
     if (user) {
-      const response = await storeGeneratedScheduleToDB(user.id, shiftsData);
-      if(response?.status == true){
-        setMessage({ status: true, text: response?.message });
-        setTimeout(() => {
-          setMessage(null);
-        }, 3000);
-      }
+      toast.promise( storeGeneratedScheduleToDB(user.id, shiftsData),{
+        loading: "Publishing schedule...",
+        success: () => {
+            return 'Schedule published!';
+        },
+        error: (err) => {
+            return "Someting went wrong";
+        }
+    })
     }
   };
 

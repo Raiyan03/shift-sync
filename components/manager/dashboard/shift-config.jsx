@@ -4,6 +4,7 @@ import { updateShifts } from "@/lib/utilities";
 import React, { useEffect, useState } from "react";
 import { MdApps } from "react-icons/md";
 import { getShiftDataFromDB } from "@/server/calls";
+import { toast } from "sonner";
 
 function ShiftConfig({ id }) {
   const [shifts, setShifts] = useState([{ shiftStart: "", shiftClose: "" }]);
@@ -125,18 +126,28 @@ function ShiftConfig({ id }) {
 
     })
 
+    
 
-    const resp = await updateShifts(
+    // const resp = await updateShifts(
+    //   id,
+    //   finalArray,
+    //   parseInt(hoursOfOperation),
+    //   parseInt(flexHours)
+    // );
+    toast.promise(updateShifts(
       id,
       finalArray,
       parseInt(hoursOfOperation),
       parseInt(flexHours)
-    );
-    if (resp == true) {
-      setTimeout(() => {
-        setSuccess(true);
-      },2000);
-    }
+    ),{
+      loading: "Updating shifts...",
+      success: () => {
+          return 'Shifts Updated!';
+      },
+      error: (err) => {
+          return "couldn't update shifts";
+      }
+  })
   };
 
   return (

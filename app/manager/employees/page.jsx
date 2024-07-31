@@ -8,15 +8,17 @@ import { getEmployeesDataFromDB } from "@/server/calls";
 export default function Employees() {
     const [employeeData, setEmployeeData] = useState();
     const [loading, setLoading] = useState(true);
+
     const fetchData = async () => {
+      setLoading(true);
       const userData = await getUser();
       const employees = await getEmployeesDataFromDB(userData.id);
       console.log(employees);
       const data = {
         employees,
       };
-      setLoading(false);
       setEmployeeData(data);
+      setLoading(false);
     };
   
     useEffect(() => {
@@ -25,7 +27,7 @@ export default function Employees() {
     
     return (
         <div className="flex flex-col gap-3">
-            <UserTable employeeData={employeeData} setEmployeeData={setEmployeeData} Loading={loading} />
+            <UserTable employeeData={employeeData} setEmployeeData={setEmployeeData} Loading={loading} fetch={fetchData} />
             <div className="flex flex-col bg-secondary shadow-md border rounded-md p-4">
                 <h1 className="text-xl font-bold mb-4">Evaluation</h1>
                 <Evaluation />

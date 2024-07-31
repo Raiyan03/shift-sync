@@ -15,6 +15,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [rawData, setRawData] = useState();
   const [shiftsData, setShiftsData] = useState();
   const [message, setMessage] = useState();
+  const [scheduleExists, setScheduleExists] = useState(false);
 
   const publishSchedule = async () => {
     const user = await getUser();
@@ -43,6 +44,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       setRawData(data);
       setShiftsData(alreadyExistingData);
       setHoursRemaining(shifts.remaining_hours);
+      setScheduleExists(true);
       setLoading(false);
     } else {
     }
@@ -70,6 +72,11 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   };
 
   const deleteSchedule = async () => {
+    if (!scheduleExists) {
+      setSchedule(null);
+      toast.success("Schedule deleted!");
+      return;
+    }
     const response = await deleteGeneratedScheduleFromDB(userId);
     if (response?.status == true) {
       setMessage({ status: true, text: response?.message });

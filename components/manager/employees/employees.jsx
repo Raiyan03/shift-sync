@@ -5,23 +5,29 @@ import { getUser } from '@/action/actions';
 import { useState, useEffect } from 'react';
 import SearchBar from "@/components/manager/employees/search"
 import { getEmployeeData } from '@/lib/utilities';
-
+import Loader from '@/components/loader';
 import { redirect, useRouter } from 'next/navigation';
 import { IoEyeSharp } from "react-icons/io5";
 import { MdBuild, MdOutlineRemoveCircleOutline, MdPreview, MdViewCompact } from 'react-icons/md';
 import { deleteEmployeeFromDB } from '@/server/calls';
-const UserTable = ({ employeeData, setEmployeeData }) => {
+import { toast } from 'sonner';
+const UserTable = ({ employeeData, setEmployeeData, Loading, fetch }) => {
     const [data, setData] = useState(employeeData);
     const {push} = useRouter()
 
     const UpdateEmpList= async (id)=>{
-      var newArr = employeeData.employees.filter((val)=> val.id !== id)
-
-      setEmployeeData(newArr)
+      await fetch();
     }
 
     return (
-        <div className="mt-4 flex flex-col bg-secondary shadow-md border rounded-md p-4">
+      Loading ? 
+      <div className='flex shadow-md border rounded-md h-60 items-center justify-center'>
+        <Loader />
+      </div> 
+
+      :
+
+      <div className=" flex flex-col bg-secondary shadow-md border rounded-md p-4">
             <SearchBar placeholder="Search for user" employeeData={employeeData} setData={setData} location="users" />
             <table className="w-full">
                 <thead>
@@ -57,7 +63,23 @@ const UserTable = ({ employeeData, setEmployeeData }) => {
                         <IoEyeSharp size={30} />
                       </button>
                     </Link>
-                      <button className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " onClick={async ()=> {const userData = await getUser(); await deleteEmployeeFromDB(userData.id, value.id); await UpdateEmpList(value.id)}}>
+                      <button 
+                      className="px-1 py-2 bg-primary text-text border-none  rounded-md cursor-pointer " 
+                      onClick={async ()=> {
+                        const userData = await getUser(); 
+                        // await deleteEmployeeFromDB(userData.id, value.id);
+                        toast.promise( deleteEmployeeFromDB(userData.id, value.id),{
+                            loading: "Deleting Employee...",
+                            success: () => {
+                                return 'Employee Deleted';
+                            },
+                            error: (err) => {
+                                return "Something went wrong";
+                            }
+                        })
+                        await UpdateEmpList(value.id)
+                        }
+                      }>
                         <MdOutlineRemoveCircleOutline size={30}/>
                       </button>
                   </div>

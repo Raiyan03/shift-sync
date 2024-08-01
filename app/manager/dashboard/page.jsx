@@ -5,6 +5,7 @@ import ShiftConfig from "@/components/manager/dashboard/shift-config";
 import { getUser } from "@/action/actions";
 import { getUserPreferencesForTheBackend } from "@/server/calls";
 import { ClipLoader } from "react-spinners";
+import Loader from "@/components/loader"
 
 export default function Page() {
   const [schedule, setSchedule] = useState();
@@ -26,7 +27,11 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-3">
-      {userId? (<ShiftConfig id={userId} />):(<div className="text-xl font-bold text-center justify-center items-center align-middle">Loading  <ClipLoader size={20} color="black" /> </div>)}
+      {userId ? 
+      (<ShiftConfig id={userId} />)
+      :
+      (<div className="flex items-center justify-center h-60 border shadow-md rounded-lg "> <Loader className="text-primary" /> </div>)
+      }
       <ScheduleTable
         Schedule={schedule}
         setSchedule={setSchedule}

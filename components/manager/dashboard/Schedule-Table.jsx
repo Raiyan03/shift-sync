@@ -8,23 +8,29 @@ import Table from "@/components/manager/dashboard/table";
 import { ClipLoader, MoonLoader } from "react-spinners";
 import { useEffect, useState } from "react";
 import { deleteGeneratedScheduleFromDB, getStoredScheduleDataFromDB, getUserPreferencesForTheBackend, storeGeneratedScheduleToDB } from "@/server/calls";
+import { toast } from "sonner";
+import Loader from "@/components/loader";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
   const [userId, setUserId] = useState();
   const [rawData, setRawData] = useState();
   const [shiftsData, setShiftsData] = useState();
   const [message, setMessage] = useState();
+  const [scheduleExists, setScheduleExists] = useState(false);
 
   const publishSchedule = async () => {
     const user = await getUser();
     if (user) {
-      const response = await storeGeneratedScheduleToDB(user.id, shiftsData);
-      if(response?.status == true){
-        setMessage({ status: true, text: response?.message });
-        setTimeout(() => {
-          setMessage(null);
-        }, 3000);
-      }
+      toast.promise( storeGeneratedScheduleToDB(user.id, shiftsData),{
+        loading: "Publishing schedule...",
+        success: () => {
+            return 'Schedule published!';
+        },
+        error: (err) => {
+            return "Something went wrong";
+        },
+    })
+    setScheduleExists(true);
     }
   };
 
@@ -40,8 +46,10 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
       setRawData(data);
       setShiftsData(alreadyExistingData);
       setHoursRemaining(shifts.remaining_hours);
+      setScheduleExists(true);
       setLoading(false);
     } else {
+      setScheduleExists(false);
     }
   };
 
@@ -67,19 +75,26 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   };
 
   const deleteSchedule = async () => {
-    const response = await deleteGeneratedScheduleFromDB(userId);
-    if (response?.status == true) {
-      setMessage({ status: true, text: response?.message });
-      setTimeout(() => {
-        setMessage(null);
-      }, 1500);
+    if (!scheduleExists) {
       setSchedule(null);
-    } else if (response?.status == false) {
-      setMessage({ status: true, text: response?.message });
-      setTimeout(() => {
-        setMessage(null);
-      }, 1500);
+      toast.success("Schedule deleted!", {
+        duration: 800,
+      });
+      return;
     }
+
+    toast.promise( deleteGeneratedScheduleFromDB(userId),{
+      loading: "Deleting schedule...",
+      success: () => {
+          return 'Schedule deleted!';
+      },
+      error: (err) => {
+          return "Something went wrong";
+      },
+      duration: 800
+  })
+    setSchedule(null);
+    setScheduleExists(false);
   };
 
   useEffect(() => {
@@ -148,7 +163,10 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         </div>
       </div>
     </div>
-  ) : (
+  ) : Loading ? 
+  (<div className=" flex items-center justify-center h-64 border shadow-md rounded-md ">
+    <Loader />
+  </div>) : (
     <div className="flex p-3 items-center justify-between bg-secondary border shadow-md rounded-md">
       <h1>There is no schedule for this week!</h1>
       <div
@@ -164,13 +182,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         } text-white rounded-md p-2 w-30`}
         onClick={fetchAndLogData}
       >
-        {Loading ? (
-          <div>
-            <ClipLoader size={20} color="white" />
-          </div>
-        ) : (
-          "Generate"
-        )}
+        Generate
       </button>
     </div>
   );

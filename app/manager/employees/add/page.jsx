@@ -7,6 +7,7 @@ import Shifts from "@/components/manager/employees/shifts";
 import { setEmployeeDataForTheDB } from "@/server/calls";
 import { redirect, useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 export default function AddUser() {
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -31,18 +32,15 @@ export default function AddUser() {
   const addEmp = async (data) => {
     const userData = await getUser();
 
-    const ret = await setEmployeeDataForTheDB(userData.id, data);
-    if (ret.status == false) {
-      setError(true);
-      setSuccess(false);
-      setErrorMsg(ret.message);
-    //   push("/manager/employee");
-    }
-    if (ret.status == true) {
-      setError(false);
-      setSuccess(true);
-      push("/manager/employees");
-    }
+    toast.promise( setEmployeeDataForTheDB(userData.id, data),{
+      loading: "Adding Employee...",
+      success: () => {
+          return 'Employee Added!';
+      },
+      error: (err) => {
+          return "Something went wrong";
+      }
+  })
   };
 
   const handleSubmit = async (e) => {

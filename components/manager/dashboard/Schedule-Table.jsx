@@ -9,6 +9,7 @@ import { ClipLoader, MoonLoader } from "react-spinners";
 import { useEffect, useState } from "react";
 import { deleteGeneratedScheduleFromDB, getStoredScheduleDataFromDB, getUserPreferencesForTheBackend, storeGeneratedScheduleToDB } from "@/server/calls";
 import { toast } from "sonner";
+import Loader from "@/components/loader";
 const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
   const [hoursRemaining, setHoursRemaining] = useState();
   const [userId, setUserId] = useState();
@@ -26,7 +27,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
             return 'Schedule published!';
         },
         error: (err) => {
-            return "Someting went wrong";
+            return "Something went wrong";
         },
     })
     setScheduleExists(true);
@@ -83,7 +84,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
     }
 
     toast.promise( deleteGeneratedScheduleFromDB(userId),{
-      loading: "Deleting shceule...",
+      loading: "Deleting schedule...",
       success: () => {
           return 'Schedule deleted!';
       },
@@ -162,7 +163,10 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         </div>
       </div>
     </div>
-  ) : (
+  ) : Loading ? 
+  (<div className=" flex items-center justify-center h-64 border shadow-md rounded-md ">
+    <Loader />
+  </div>) : (
     <div className="flex p-3 items-center justify-between bg-secondary border shadow-md rounded-md">
       <h1>There is no schedule for this week!</h1>
       <div
@@ -178,13 +182,7 @@ const ScheduleTable = ({ Schedule, Loading, setLoading, setSchedule }) => {
         } text-white rounded-md p-2 w-30`}
         onClick={fetchAndLogData}
       >
-        {Loading ? (
-          <div>
-            <ClipLoader size={20} color="white" />
-          </div>
-        ) : (
-          "Generate"
-        )}
+        Generate
       </button>
     </div>
   );

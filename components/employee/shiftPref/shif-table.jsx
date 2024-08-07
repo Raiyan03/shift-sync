@@ -14,8 +14,10 @@ const ShiftTable = ({ schedule }) => {
             </tr>
           </thead>
           <tbody>
-            {schedule.map((item, index) => (
+            {schedule.map((item, index) => 
+            (
               <tr key={index}>
+                {console.log(item)}
                 <td className="p-2 text-center">{getDayName(item.day)}</td>
                 <td className="p-2 text-center">{`${formatTime(item.shift.shift[0])} - ${formatTime(item.shift.shift[1])}`}</td>
                 <td className="p-2 text-center">{item.shift.hours}hr</td>

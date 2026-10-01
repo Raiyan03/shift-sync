@@ -85,4 +85,4 @@ https://github.com/user-attachments/assets/e5476976-f99e-4447-b05e-c7018af8a68e
 
 ## Microservices
 
-Shift Sync is composed of multiple microservices. Here’s a link to the [Scheduling Microservice](https://github.com/username/scheduling-microservice), which is responsible for generating optimized schedules using OR-Tools.
+Shift Sync is composed of multiple microservices. Here’s a link to the [Scheduling Microservice]([https://github.com/username/scheduling-microservice](https://github.com/Raiyan03/OR)), which is responsible for generating optimized schedules using OR-Tools.
